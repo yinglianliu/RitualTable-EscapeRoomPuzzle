@@ -1,0 +1,1403 @@
+[
+    {
+        "id": "6af4b1e3715da83f",
+        "type": "tab",
+        "label": "Drawer",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "tab_ritual_wifi",
+        "type": "tab",
+        "label": "Ritual Table WiFi",
+        "disabled": false,
+        "info": ""
+    },
+    {
+        "id": "f7f5e1905c9bb06f",
+        "type": "mqtt-broker",
+        "name": "EscapeRoom",
+        "broker": "192.168.137.1",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "250e2c8a56f44ac9",
+        "type": "ui_tab",
+        "d": true,
+        "name": "Home",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "651e46d2e60bf862",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#114d00",
+                "baseFont": "Arial,Arial,Helvetica,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#4a9f04",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#114d00",
+                    "edited": true
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#114d00",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#333333",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#229900",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#114d00",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "Arial,Arial,Helvetica,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Escape Room Control",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "true",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "b6866adc82789683",
+        "type": "ui_group",
+        "name": "Drawer",
+        "tab": "250e2c8a56f44ac9",
+        "order": 1,
+        "disp": true,
+        "width": 6,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "mqtt_config_local",
+        "type": "mqtt-broker",
+        "name": "Localhost MQTT",
+        "broker": "localhost",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "tab_dashboard",
+        "type": "ui_tab",
+        "name": "Escape Room",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "grp_monitoring",
+        "type": "ui_group",
+        "name": "Ritual Table Status",
+        "tab": "tab_dashboard",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "grp_control",
+        "type": "ui_group",
+        "name": "Admin Control",
+        "tab": "tab_dashboard",
+        "order": 2,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "1c977631e1e9f74d",
+        "type": "ui_button",
+        "z": "6af4b1e3715da83f",
+        "name": "",
+        "group": "b6866adc82789683",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "Open Drawer",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "1",
+        "payloadType": "str",
+        "topic": "topic",
+        "topicType": "msg",
+        "x": 630,
+        "y": 300,
+        "wires": [
+            [
+                "d9f2b03d0e64fa9d"
+            ]
+        ]
+    },
+    {
+        "id": "d9f2b03d0e64fa9d",
+        "type": "mqtt out",
+        "z": "6af4b1e3715da83f",
+        "name": "",
+        "topic": "demo/drawer/cmd",
+        "qos": "1",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "f7f5e1905c9bb06f",
+        "x": 870,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "9d4f99eded66fcf5",
+        "type": "mqtt in",
+        "z": "6af4b1e3715da83f",
+        "name": "",
+        "topic": "demo/drawer/status",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "f7f5e1905c9bb06f",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 650,
+        "y": 560,
+        "wires": [
+            [
+                "eadd153aed01c884",
+                "5d8ec54a9c8af364",
+                "1d55a6c72e5eca7d"
+            ]
+        ]
+    },
+    {
+        "id": "eadd153aed01c884",
+        "type": "ui_text",
+        "z": "6af4b1e3715da83f",
+        "group": "b6866adc82789683",
+        "order": 0,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "DrawerState",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 910,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "c99755a48c6f79d0",
+        "type": "inject",
+        "z": "6af4b1e3715da83f",
+        "name": "pertenToClose",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "CLOSE",
+        "payloadType": "str",
+        "x": 190,
+        "y": 580,
+        "wires": [
+            [
+                "a6122aa16b8d07e4"
+            ]
+        ]
+    },
+    {
+        "id": "a6122aa16b8d07e4",
+        "type": "mqtt out",
+        "z": "6af4b1e3715da83f",
+        "name": "",
+        "topic": "demo/drawer/status",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "f7f5e1905c9bb06f",
+        "x": 410,
+        "y": 540,
+        "wires": []
+    },
+    {
+        "id": "f37ffbc28b7b3ff5",
+        "type": "mqtt in",
+        "z": "6af4b1e3715da83f",
+        "name": "",
+        "topic": "demo/drawer/cmd",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "f7f5e1905c9bb06f",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 190,
+        "y": 320,
+        "wires": [
+            [
+                "b41e8f328b7acb9e"
+            ]
+        ]
+    },
+    {
+        "id": "b41e8f328b7acb9e",
+        "type": "debug",
+        "z": "6af4b1e3715da83f",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 420,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "aeed1fd0debeb1de",
+        "type": "comment",
+        "z": "6af4b1e3715da83f",
+        "name": "",
+        "info": "Using a button to open the drawer thro MQTT\nWhen click the button,send a message \"1\" to the topic \"demo/drawer/cmd\"",
+        "x": 640,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "3a57496b96dee9ab",
+        "type": "comment",
+        "z": "6af4b1e3715da83f",
+        "name": "",
+        "info": "when the micro switch sensor is relesed, arduino will send a message \"OPEN\" to the topic \"demo/drawer/status\",the status will displace in the text node",
+        "x": 620,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "5d8ec54a9c8af364",
+        "type": "switch",
+        "z": "6af4b1e3715da83f",
+        "name": "Open",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "OPEN",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 890,
+        "y": 560,
+        "wires": [
+            [
+                "77b42c24a5398a46",
+                "ea0922cb6fbd9c26"
+            ]
+        ]
+    },
+    {
+        "id": "213636f69f1cf90f",
+        "type": "osc",
+        "z": "6af4b1e3715da83f",
+        "name": "",
+        "path": "",
+        "metadata": false,
+        "x": 1430,
+        "y": 620,
+        "wires": [
+            [
+                "1ce814cfd6e71ea6"
+            ]
+        ]
+    },
+    {
+        "id": "5ee6d843343af312",
+        "type": "inject",
+        "z": "6af4b1e3715da83f",
+        "name": "pertenToOpen",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "OPEN",
+        "payloadType": "str",
+        "x": 190,
+        "y": 500,
+        "wires": [
+            [
+                "a6122aa16b8d07e4"
+            ]
+        ]
+    },
+    {
+        "id": "77b42c24a5398a46",
+        "type": "change",
+        "z": "6af4b1e3715da83f",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "/cue/OPEN/start",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "[]",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1080,
+        "y": 560,
+        "wires": [
+            [
+                "213636f69f1cf90f"
+            ]
+        ]
+    },
+    {
+        "id": "1ce814cfd6e71ea6",
+        "type": "udp out",
+        "z": "6af4b1e3715da83f",
+        "name": "",
+        "addr": "192.168.137.106",
+        "iface": "",
+        "port": "53000",
+        "ipv": "udp4",
+        "outport": "",
+        "base64": true,
+        "multicast": "false",
+        "x": 1640,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "1d55a6c72e5eca7d",
+        "type": "switch",
+        "z": "6af4b1e3715da83f",
+        "name": "Close",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "CLOSED",
+                "vt": "str"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 890,
+        "y": 680,
+        "wires": [
+            [
+                "b0212e46f7f76d37",
+                "0130f1eaf8578dd3"
+            ]
+        ]
+    },
+    {
+        "id": "b0212e46f7f76d37",
+        "type": "change",
+        "z": "6af4b1e3715da83f",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "/cue/CLOSED/start",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "[]",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1080,
+        "y": 680,
+        "wires": [
+            [
+                "213636f69f1cf90f"
+            ]
+        ]
+    },
+    {
+        "id": "ea0922cb6fbd9c26",
+        "type": "function",
+        "z": "6af4b1e3715da83f",
+        "name": "LightOn",
+        "func": "msg.payload = [255,0,0,255];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1080,
+        "y": 480,
+        "wires": [
+            [
+                "2c8d9b3c18969e72"
+            ]
+        ]
+    },
+    {
+        "id": "0130f1eaf8578dd3",
+        "type": "function",
+        "z": "6af4b1e3715da83f",
+        "name": "LightOff",
+        "func": "msg.payload = [0,0,0,0];\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1080,
+        "y": 760,
+        "wires": [
+            [
+                "2c8d9b3c18969e72"
+            ]
+        ]
+    },
+    {
+        "id": "2c8d9b3c18969e72",
+        "type": "artnet out",
+        "z": "6af4b1e3715da83f",
+        "name": "",
+        "address": "127.0.0.1",
+        "port": 6454,
+        "size": 512,
+        "rate": 40,
+        "universe": 0,
+        "x": 1430,
+        "y": 520,
+        "wires": []
+    },
+    {
+        "id": "mqtt_broker_node",
+        "type": "aedes broker",
+        "z": "tab_ritual_wifi",
+        "name": "Local MQTT Server",
+        "mqtt_port": "1883",
+        "mqtt_ws_bind": "port",
+        "mqtt_ws_port": "",
+        "mqtt_ws_path": "",
+        "cert": "",
+        "key": "",
+        "ca": "",
+        "certname": "",
+        "keyname": "",
+        "caname": "",
+        "persistence_bind": "memory",
+        "dburl": "",
+        "usetls": false,
+        "x": 150,
+        "y": 80,
+        "wires": [
+            [],
+            []
+        ]
+    },
+    {
+        "id": "mqtt_in_status",
+        "type": "mqtt in",
+        "z": "tab_ritual_wifi",
+        "name": "ReceivingData",
+        "topic": "demo/ritualtable/status",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "mqtt_config_local",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 200,
+        "wires": [
+            [
+                "json_parser",
+                "debug_status"
+            ]
+        ]
+    },
+    {
+        "id": "json_parser",
+        "type": "json",
+        "z": "tab_ritual_wifi",
+        "name": "",
+        "property": "payload",
+        "action": "",
+        "pretty": false,
+        "x": 290,
+        "y": 200,
+        "wires": [
+            [
+                "split_function",
+                "c100d803fb6633be",
+                "b25d19969a919679"
+            ]
+        ]
+    },
+    {
+        "id": "split_function",
+        "type": "function",
+        "z": "tab_ritual_wifi",
+        "name": "SplitStateData",
+        "func": "// input data format: { \"data\": [1,0,1,0,0], \"solved\": false }\n\nvar states = msg.payload.data;\nvar isSolved = msg.payload.solved;\n\nfunction toBool(val) {\n    return val == 1;\n}\n\n// send to 5 LED\nvar msg1 = { payload: toBool(states[0]) };\nvar msg2 = { payload: toBool(states[1]) };\nvar msg3 = { payload: toBool(states[2]) };\nvar msg4 = { payload: toBool(states[3]) };\nvar msg5 = { payload: toBool(states[4]) };\n\n// \nvar msgSolved = { payload: isSolved ? \"PUZZLE SOLVED!\" : \"Waiting...\" };\n\nreturn [msg1, msg2, msg3, msg4, msg5, msgSolved];",
+        "outputs": 6,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 200,
+        "wires": [
+            [
+                "led_1"
+            ],
+            [
+                "led_2"
+            ],
+            [
+                "led_3"
+            ],
+            [
+                "led_4"
+            ],
+            [
+                "led_5"
+            ],
+            [
+                "text_status"
+            ]
+        ]
+    },
+    {
+        "id": "led_1",
+        "type": "ui_led",
+        "z": "tab_ritual_wifi",
+        "order": 1,
+        "group": "grp_monitoring",
+        "width": 0,
+        "height": 0,
+        "label": "Trophies",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#ff0000",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#00ff00",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "",
+        "x": 790,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "led_2",
+        "type": "ui_led",
+        "z": "tab_ritual_wifi",
+        "order": 2,
+        "group": "grp_monitoring",
+        "width": 0,
+        "height": 0,
+        "label": "Sheet Music",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#ff0000",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#00ff00",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "",
+        "x": 790,
+        "y": 144,
+        "wires": []
+    },
+    {
+        "id": "led_3",
+        "type": "ui_led",
+        "z": "tab_ritual_wifi",
+        "order": 3,
+        "group": "grp_monitoring",
+        "width": 0,
+        "height": 0,
+        "label": "Amulet",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#ff0000",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#00ff00",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "",
+        "x": 790,
+        "y": 188,
+        "wires": []
+    },
+    {
+        "id": "led_4",
+        "type": "ui_led",
+        "z": "tab_ritual_wifi",
+        "order": 4,
+        "group": "grp_monitoring",
+        "width": 0,
+        "height": 0,
+        "label": "Journal",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#ff0000",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#00ff00",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "",
+        "x": 790,
+        "y": 232,
+        "wires": []
+    },
+    {
+        "id": "led_5",
+        "type": "ui_led",
+        "z": "tab_ritual_wifi",
+        "order": 5,
+        "group": "grp_monitoring",
+        "width": 0,
+        "height": 0,
+        "label": "Ring Box",
+        "labelPlacement": "left",
+        "labelAlignment": "left",
+        "colorForValue": [
+            {
+                "color": "#ff0000",
+                "value": "false",
+                "valueType": "bool"
+            },
+            {
+                "color": "#00ff00",
+                "value": "true",
+                "valueType": "bool"
+            }
+        ],
+        "allowColorForValueInMessage": false,
+        "shape": "circle",
+        "showGlow": true,
+        "name": "",
+        "x": 790,
+        "y": 276,
+        "wires": []
+    },
+    {
+        "id": "text_status",
+        "type": "ui_text",
+        "z": "tab_ritual_wifi",
+        "group": "grp_monitoring",
+        "order": 6,
+        "width": 0,
+        "height": 0,
+        "name": "",
+        "label": "Status:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 800,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "btn_reset",
+        "type": "ui_button",
+        "z": "tab_ritual_wifi",
+        "d": true,
+        "name": "",
+        "group": "grp_control",
+        "order": 3,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "⚠️ RESET PUZZLE",
+        "tooltip": "",
+        "color": "white",
+        "bgcolor": "red",
+        "className": "",
+        "icon": "",
+        "payload": "R",
+        "payloadType": "str",
+        "topic": "demo/ritualtable/control",
+        "topicType": "str",
+        "x": 360,
+        "y": 1160,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "btn_force",
+        "type": "ui_button",
+        "z": "tab_ritual_wifi",
+        "d": true,
+        "name": "",
+        "group": "grp_control",
+        "order": 4,
+        "width": 0,
+        "height": 0,
+        "passthru": false,
+        "label": "FORCE WIN",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "orange",
+        "className": "",
+        "icon": "",
+        "payload": "F",
+        "payloadType": "str",
+        "topic": "demo/ritualtable/control",
+        "topicType": "str",
+        "x": 340,
+        "y": 1220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "mqtt_out_control",
+        "type": "mqtt out",
+        "z": "tab_ritual_wifi",
+        "name": "SendingCMD",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "mqtt_config_local",
+        "x": 520,
+        "y": 1060,
+        "wires": []
+    },
+    {
+        "id": "debug_status",
+        "type": "debug",
+        "z": "tab_ritual_wifi",
+        "name": "RAW Data",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 370,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "d838b7ad63e422b6",
+        "type": "ui_template",
+        "z": "tab_ritual_wifi",
+        "group": "grp_control",
+        "name": "Force Win",
+        "order": 2,
+        "width": 0,
+        "height": 0,
+        "format": "<div layout=\"row\" layout-align=\"center center\">\n    <md-button class=\"md-raised\" style=\"background-color: orange; color: white; width: 100%; font-weight: bold;\"\n        ng-click=\"checkForceWin()\">\n        ⚠️ FORCE WIN\n    </md-button>\n</div>\n\n<script>\n    (function($scope) {\n    // \n    $scope.checkForceWin = function() {\n        // \n        var result = confirm(\"⚠️ Warning ⚠️\\n\\nSure to WIN？\\nThis will turn on all the candles and play win animation!\");\n        \n        if (result) {\n            // \n            $scope.send({\n                payload: \"F\", \n                topic: \"demo/ritualtable/control\" \n            });\n        }\n    }\n})(scope);\n</script>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 320,
+        "y": 1080,
+        "wires": [
+            [
+                "mqtt_out_control"
+            ]
+        ]
+    },
+    {
+        "id": "297a0537f2ae35cb",
+        "type": "ui_template",
+        "z": "tab_ritual_wifi",
+        "group": "grp_control",
+        "name": "Reset Puzzle",
+        "order": 1,
+        "width": 0,
+        "height": 0,
+        "format": "<div layout=\"row\" layout-align=\"center center\">\n    <md-button class=\"md-raised\" style=\"background-color: red; color: white; width: 100%; font-weight: bold;\"\n        ng-click=\"checkResetPuzzle()\">\n        ⚠️ RESET PUZZLE\n    </md-button>\n</div>\n\n<script>\n    (function($scope) {\n    // \n    $scope.checkResetPuzzle = function() {\n        // \n        var result = confirm(\"⚠️ Warning ⚠️\\n\\n Are you sure to reset the game？\\n It will be empty all the process!\");\n        \n        if (result) {\n            // \n            $scope.send({\n                payload: \"R\", \n                topic: \"demo/ritualtable/control\" \n            });\n        }\n    }\n})(scope);\n</script>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 330,
+        "y": 1020,
+        "wires": [
+            [
+                "mqtt_out_control",
+                "12081b6af4f77351"
+            ]
+        ]
+    },
+    {
+        "id": "85a894b9372a3e39",
+        "type": "osc",
+        "z": "tab_ritual_wifi",
+        "name": "",
+        "path": "",
+        "metadata": false,
+        "x": 830,
+        "y": 520,
+        "wires": [
+            [
+                "8a7c18ad686b8995",
+                "af74d7b1101ad83a"
+            ]
+        ]
+    },
+    {
+        "id": "8a7c18ad686b8995",
+        "type": "udp out",
+        "z": "tab_ritual_wifi",
+        "name": "Qlab",
+        "addr": "192.168.137.17",
+        "iface": "",
+        "port": "53000",
+        "ipv": "udp4",
+        "outport": "",
+        "base64": false,
+        "multicast": "false",
+        "x": 970,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "c100d803fb6633be",
+        "type": "switch",
+        "z": "tab_ritual_wifi",
+        "name": "",
+        "property": "payload.solved",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "true"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 450,
+        "y": 460,
+        "wires": [
+            [
+                "db0b65921ff8285b"
+            ]
+        ]
+    },
+    {
+        "id": "db0b65921ff8285b",
+        "type": "change",
+        "z": "tab_ritual_wifi",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "/cue/WIN/start",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "[]",
+                "tot": "str"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 620,
+        "y": 460,
+        "wires": [
+            [
+                "85a894b9372a3e39"
+            ]
+        ]
+    },
+    {
+        "id": "af74d7b1101ad83a",
+        "type": "udp out",
+        "z": "tab_ritual_wifi",
+        "name": "QLC",
+        "addr": "192.168.137.1",
+        "iface": "",
+        "port": "7700",
+        "ipv": "udp4",
+        "outport": "",
+        "base64": false,
+        "multicast": "false",
+        "x": 970,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "cea5b03f5517dc38",
+        "type": "change",
+        "z": "tab_ritual_wifi",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "/table/light/on",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "1.0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 620,
+        "y": 540,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "12081b6af4f77351",
+        "type": "change",
+        "z": "tab_ritual_wifi",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "topic",
+                "pt": "msg",
+                "to": "/table/light/off",
+                "tot": "str"
+            },
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "1.0",
+                "tot": "num"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 620,
+        "y": 960,
+        "wires": [
+            [
+                "85a894b9372a3e39"
+            ]
+        ]
+    },
+    {
+        "id": "b25d19969a919679",
+        "type": "function",
+        "z": "tab_ritual_wifi",
+        "name": "ToDMXFixtures",
+        "func": "// get the array from Arduino\nvar statusArray = msg.payload.data;\nvar outputMsgs = [];\n\n// Get the previous state (if none, default to all 0)\nvar lastStates = context.get('lastStates') || [0, 0, 0, 0, 0];\n\nfor (var i = 0; i < 5; i++) {\n    // send only if the state is changed\n    if (statusArray[i] != lastStates[i]) {\n\n        var oscPath = \"/ritual/light/\" + (i + 1);\n        \n        var oscValue = (statusArray[i] == 1) ? 1 : 0;\n\n        outputMsgs.push({\n            topic: oscPath,\n            payload: oscValue\n        });\n    }\n}\n\n// store the current state\ncontext.set('lastStates', statusArray);\n\n// if the array is empty, nothing changes, do not send\nif (outputMsgs.length === 0) {\n    return null;\n}\n\nreturn [outputMsgs];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 700,
+        "wires": [
+            [
+                "85a894b9372a3e39"
+            ]
+        ]
+    },
+    {
+        "id": "98ec0085195b8931",
+        "type": "inject",
+        "z": "tab_ritual_wifi",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "/ritual/light/1",
+        "payload": "1",
+        "payloadType": "num",
+        "x": 204.78570556640625,
+        "y": 620,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "1804d0ce46bd7a11",
+        "type": "inject",
+        "z": "tab_ritual_wifi",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "/ritual/light/2",
+        "payload": "1",
+        "payloadType": "num",
+        "x": 204.78570556640625,
+        "y": 680,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "a6b030dbb60f5f30",
+        "type": "inject",
+        "z": "tab_ritual_wifi",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "/ritual/light/3",
+        "payload": "1",
+        "payloadType": "num",
+        "x": 204.78570556640625,
+        "y": 740,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e5454d0e5ff81fc4",
+        "type": "inject",
+        "z": "tab_ritual_wifi",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "/ritual/light/4",
+        "payload": "1",
+        "payloadType": "num",
+        "x": 204.78570556640625,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "69567b53df29e080",
+        "type": "inject",
+        "z": "tab_ritual_wifi",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "/ritual/light/5",
+        "payload": "1",
+        "payloadType": "num",
+        "x": 204.78570556640625,
+        "y": 860,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6df6ce111a85556f",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6",
+            "node-red-contrib-osc": "1.1.0",
+            "node-red-contrib-artnet": "0.0.1",
+            "node-red-contrib-aedes": "0.15.0",
+            "node-red-contrib-ui-led": "0.4.11"
+        }
+    }
+]
