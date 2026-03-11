@@ -10,7 +10,7 @@
   <InputOutputMap>
    <BeatGenerator BeatType="Disabled" BPM="120"/>
    <Universe Name="Universe 1" ID="0">
-    <Input Plugin="OSC" UID="192.168.137.1" Line="4"/>
+    <Input Plugin="OSC" UID="192.168.10.100" Line="5"/>
     <Output Plugin="DMX USB" UID="FT245R USB FIFO - DMX Output 1 - (S/N: ENP08X20)" Line="0">
      <PluginParameters UniverseChannels="20"/>
     </Output>
@@ -98,6 +98,17 @@
    <Speed FadeIn="0" FadeOut="0" Duration="0"/>
    <FixtureVal ID="4">0,0,1,255,2,0,3,0</FixtureVal>
   </Function>
+  <Function ID="6" Type="Chaser" Name="WinAnimation">
+   <Speed FadeIn="0" FadeOut="0" Duration="50"/>
+   <Direction>Forward</Direction>
+   <RunOrder>Loop</RunOrder>
+   <SpeedModes FadeIn="Default" FadeOut="Default" Duration="Common"/>
+   <Step Number="0" FadeIn="0" Hold="50" FadeOut="0">1</Step>
+   <Step Number="1" FadeIn="0" Hold="50" FadeOut="0">2</Step>
+   <Step Number="2" FadeIn="0" Hold="50" FadeOut="0">3</Step>
+   <Step Number="3" FadeIn="0" Hold="50" FadeOut="0">4</Step>
+   <Step Number="4" FadeIn="0" Hold="50" FadeOut="0">5</Step>
+  </Function>
   <Monitor DisplayMode="0" ShowLabels="0">
    <Font>Arial,12,-1,5,400,0,0,0,0,0,0,0,0,0,0,1</Font>
    <ChannelStyle>0</ChannelStyle>
@@ -122,26 +133,17 @@
    <ShowEnableButton>True</ShowEnableButton>
    <Collapsed>False</Collapsed>
    <Disabled>False</Disabled>
-   <Button Caption="Fixture 1" ID="1">
-    <WindowState Visible="True" X="352" Y="502" Width="76" Height="76"/>
-    <Appearance>
-     <BackgroundColor>4282664004</BackgroundColor>
-    </Appearance>
-    <Function ID="1"/>
-    <Action>Toggle</Action>
-    <Input ID="0" Universe="0" Channel="25710"/>
-   </Button>
-   <Button Caption="Fixture 3" ID="3">
-    <WindowState Visible="True" X="352" Y="719" Width="76" Height="76"/>
+   <Button Caption="Amulet" ID="3">
+    <WindowState Visible="True" X="300" Y="715" Width="71" Height="71"/>
     <Appearance>
      <BackgroundColor>4282664004</BackgroundColor>
     </Appearance>
     <Function ID="3"/>
-    <Action>Toggle</Action>
+    <Action Override="0" ForceLTP="0">Flash</Action>
     <Input ID="0" Universe="0" Channel="18300"/>
    </Button>
    <Button Caption="Light OFF" ID="0">
-    <WindowState Visible="True" X="352" Y="393" Width="76" Height="76"/>
+    <WindowState Visible="True" X="300" Y="300" Width="71" Height="71"/>
     <Appearance>
      <BackgroundColor>4282664004</BackgroundColor>
     </Appearance>
@@ -149,32 +151,50 @@
     <Action FadeOut="60">StopAll</Action>
     <Input ID="0" Universe="0" Channel="57237"/>
    </Button>
-   <Button Caption="Fixture 5" ID="6">
-    <WindowState Visible="True" X="352" Y="923" Width="76" Height="76"/>
+   <Button Caption="RingBox" ID="6">
+    <WindowState Visible="True" X="300" Y="902" Width="71" Height="71"/>
     <Appearance>
      <BackgroundColor>4282664004</BackgroundColor>
     </Appearance>
     <Function ID="5"/>
-    <Action>Toggle</Action>
+    <Action Override="0" ForceLTP="0">Flash</Action>
     <Input ID="0" Universe="0" Channel="8778"/>
    </Button>
-   <Button Caption="Fixture 2" ID="2">
-    <WindowState Visible="True" X="352" Y="610" Width="76" Height="76"/>
+   <Button Caption="WinAnimation" ID="4">
+    <WindowState Visible="True" X="300" Y="415" Width="85" Height="85"/>
     <Appearance>
      <BackgroundColor>4282664004</BackgroundColor>
     </Appearance>
-    <Function ID="2"/>
+    <Function ID="6"/>
     <Action>Toggle</Action>
-    <Input ID="0" Universe="0" Channel="22261"/>
+    <Input ID="0" Universe="0" Channel="4998"/>
    </Button>
-   <Button Caption="Fixture 4" ID="5">
-    <WindowState Visible="True" X="352" Y="828" Width="76" Height="76"/>
+   <Button Caption="Trophy" ID="1">
+    <WindowState Visible="True" X="300" Y="529" Width="71" Height="71"/>
+    <Appearance>
+     <BackgroundColor>4282664004</BackgroundColor>
+    </Appearance>
+    <Function ID="1"/>
+    <Action Override="0" ForceLTP="0">Flash</Action>
+    <Input ID="0" Universe="0" Channel="25710"/>
+   </Button>
+   <Button Caption="Journal" ID="5">
+    <WindowState Visible="True" X="300" Y="801" Width="76" Height="76"/>
     <Appearance>
      <BackgroundColor>4282664004</BackgroundColor>
     </Appearance>
     <Function ID="4"/>
-    <Action>Toggle</Action>
+    <Action Override="0" ForceLTP="0">Flash</Action>
     <Input ID="0" Universe="0" Channel="13251"/>
+   </Button>
+   <Button Caption="SheetMusic" ID="2">
+    <WindowState Visible="True" X="300" Y="615" Width="76" Height="76"/>
+    <Appearance>
+     <BackgroundColor>4282664004</BackgroundColor>
+    </Appearance>
+    <Function ID="2"/>
+    <Action Override="0" ForceLTP="0">Flash</Action>
+    <Input ID="0" Universe="0" Channel="22261"/>
    </Button>
   </Frame>
   <Frame Caption="Page 2" ID="1">
