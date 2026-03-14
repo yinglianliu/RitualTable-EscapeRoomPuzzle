@@ -1,15 +1,16 @@
 [
     {
-        "id": "f4338a68ae18fd22",
+        "id": "33698b568f6037bd",
         "type": "tab",
-        "label": "Ritual Table WiFi",
+        "label": "Ritual Table Serial",
         "disabled": false,
         "info": ""
     },
     {
-        "id": "1fe6822bb460b529",
+        "id": "38e1eeefd413df85",
         "type": "mqtt in",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
+        "d": true,
         "name": "ReceivingData",
         "topic": "demo/ritualtable/status",
         "qos": "0",
@@ -19,19 +20,16 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 140,
-        "y": 200,
+        "x": 100,
+        "y": 80,
         "wires": [
-            [
-                "ca43fee70732c333",
-                "41fa14e40e1e0ead"
-            ]
+            []
         ]
     },
     {
-        "id": "ca43fee70732c333",
+        "id": "c1291bb550f9bce7",
         "type": "json",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "",
         "property": "payload",
         "action": "",
@@ -40,16 +38,16 @@
         "y": 200,
         "wires": [
             [
-                "d8c09c329db3aa1a",
-                "1e60d4f1b72df23c",
-                "6055941e8c744a4a"
+                "9c6a3aa4a1a167e8",
+                "66c76f990291ae40",
+                "4703b560fa594d0d"
             ]
         ]
     },
     {
-        "id": "d8c09c329db3aa1a",
+        "id": "9c6a3aa4a1a167e8",
         "type": "function",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "SplitStateData",
         "func": "// Input data format: { \"data\": [1,0,1,0,0], \"solved\": false }\n\nvar states = msg.payload.data;\nvar isSolved = msg.payload.solved;\n\nfunction toBool(val) {\n    return val == 1;\n}\n\n// Send status to the 5 dashboard LEDs\nvar msg1 = { payload: toBool(states[0]) };\nvar msg2 = { payload: toBool(states[1]) };\nvar msg3 = { payload: toBool(states[2]) };\nvar msg4 = { payload: toBool(states[3]) };\nvar msg5 = { payload: toBool(states[4]) };\n\n// Status text for the dashboard\nvar msgSolved = { payload: isSolved ? \"PUZZLE SOLVED!\" : \"Waiting...\" };\n\nreturn [msg1, msg2, msg3, msg4, msg5, msgSolved];",
         "outputs": 6,
@@ -62,29 +60,29 @@
         "y": 200,
         "wires": [
             [
-                "1792ba9812a64006"
+                "2d93a8d3ccf33feb"
             ],
             [
-                "f0803d29b47a7dfe"
+                "bb64dd1ae1a933e5"
             ],
             [
-                "df4969274a5598c6"
+                "d6e2d0067f0b553a"
             ],
             [
-                "944159c9a7262913"
+                "e526058f5928967f"
             ],
             [
-                "9037bff186660e5c"
+                "1d2162d0be442627"
             ],
             [
-                "59167662c38f9203"
+                "35ca200604038c8a"
             ]
         ]
     },
     {
-        "id": "1792ba9812a64006",
+        "id": "2d93a8d3ccf33feb",
         "type": "ui_led",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "order": 1,
         "group": "grp_monitoring",
         "width": 0,
@@ -113,9 +111,9 @@
         "wires": []
     },
     {
-        "id": "f0803d29b47a7dfe",
+        "id": "bb64dd1ae1a933e5",
         "type": "ui_led",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "order": 2,
         "group": "grp_monitoring",
         "width": 0,
@@ -144,9 +142,9 @@
         "wires": []
     },
     {
-        "id": "df4969274a5598c6",
+        "id": "d6e2d0067f0b553a",
         "type": "ui_led",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "order": 3,
         "group": "grp_monitoring",
         "width": 0,
@@ -175,9 +173,9 @@
         "wires": []
     },
     {
-        "id": "944159c9a7262913",
+        "id": "e526058f5928967f",
         "type": "ui_led",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "order": 4,
         "group": "grp_monitoring",
         "width": 0,
@@ -206,9 +204,9 @@
         "wires": []
     },
     {
-        "id": "9037bff186660e5c",
+        "id": "1d2162d0be442627",
         "type": "ui_led",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "order": 5,
         "group": "grp_monitoring",
         "width": 0,
@@ -237,9 +235,9 @@
         "wires": []
     },
     {
-        "id": "59167662c38f9203",
+        "id": "35ca200604038c8a",
         "type": "ui_text",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "group": "grp_monitoring",
         "order": 6,
         "width": 0,
@@ -258,9 +256,9 @@
         "wires": []
     },
     {
-        "id": "df8b85c407fa7481",
+        "id": "e230f83350d033a4",
         "type": "ui_button",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "d": true,
         "name": "",
         "group": "grp_control",
@@ -285,9 +283,9 @@
         ]
     },
     {
-        "id": "81d4a2ab62fb6e35",
+        "id": "b4893aaa3092b14a",
         "type": "ui_button",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "d": true,
         "name": "",
         "group": "grp_control",
@@ -312,9 +310,10 @@
         ]
     },
     {
-        "id": "7f045085c09bf9ae",
+        "id": "f4f2613ddfdd7881",
         "type": "mqtt out",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
+        "d": true,
         "name": "SendingCMD",
         "topic": "",
         "qos": "",
@@ -326,13 +325,13 @@
         "expiry": "",
         "broker": "e3685db063ce93e9",
         "x": 690,
-        "y": 940,
+        "y": 1020,
         "wires": []
     },
     {
-        "id": "41fa14e40e1e0ead",
+        "id": "048130df8fbd4a77",
         "type": "debug",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "RAW Data From Arduino",
         "active": true,
         "tosidebar": true,
@@ -342,14 +341,14 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 410,
+        "x": 370,
         "y": 100,
         "wires": []
     },
     {
-        "id": "2a5021d2a9c5a347",
+        "id": "92df5e6c1106769d",
         "type": "ui_template",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "group": "grp_control",
         "name": "Force Win",
         "order": 2,
@@ -365,14 +364,14 @@
         "y": 960,
         "wires": [
             [
-                "7f045085c09bf9ae"
+                "f08903e4deb1e599"
             ]
         ]
     },
     {
-        "id": "1177d13db63106e8",
+        "id": "cf83658436c9d1fa",
         "type": "ui_template",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "group": "grp_control",
         "name": "Reset Puzzle",
         "order": 1,
@@ -388,15 +387,15 @@
         "y": 880,
         "wires": [
             [
-                "7f045085c09bf9ae",
-                "5ec2a0a28f5b1fcd"
+                "147ebdd2cd0ad99b",
+                "f08903e4deb1e599"
             ]
         ]
     },
     {
-        "id": "a4f03bd3685bd9df",
+        "id": "211d72aca4ea5575",
         "type": "osc",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "",
         "path": "",
         "metadata": false,
@@ -404,16 +403,16 @@
         "y": 500,
         "wires": [
             [
-                "b017f774507af36b"
+                "ac1d68a7784fe84e"
             ]
         ]
     },
     {
-        "id": "55abef018c6e2e73",
+        "id": "0cf8a841954a3acf",
         "type": "udp out",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "Qlab",
-        "addr": "192.168.137.17",
+        "addr": "192.168.10.100",
         "iface": "",
         "port": "53000",
         "ipv": "udp4",
@@ -425,9 +424,9 @@
         "wires": []
     },
     {
-        "id": "1e60d4f1b72df23c",
+        "id": "66c76f990291ae40",
         "type": "switch",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "",
         "property": "payload.solved",
         "propertyType": "msg",
@@ -443,14 +442,14 @@
         "y": 460,
         "wires": [
             [
-                "9350e3c3575d3980"
+                "3ac6485596667e3d"
             ]
         ]
     },
     {
-        "id": "9350e3c3575d3980",
+        "id": "3ac6485596667e3d",
         "type": "change",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "",
         "rules": [
             {
@@ -477,16 +476,16 @@
         "y": 460,
         "wires": [
             [
-                "a4f03bd3685bd9df"
+                "211d72aca4ea5575"
             ]
         ]
     },
     {
-        "id": "677766ae56d64d63",
+        "id": "0de9a8fde3e940d4",
         "type": "udp out",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "QLC",
-        "addr": "192.168.137.1",
+        "addr": "192.168.10.100",
         "iface": "",
         "port": "7700",
         "ipv": "udp4",
@@ -498,9 +497,9 @@
         "wires": []
     },
     {
-        "id": "5ec2a0a28f5b1fcd",
+        "id": "147ebdd2cd0ad99b",
         "type": "change",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "",
         "rules": [
             {
@@ -527,16 +526,16 @@
         "y": 880,
         "wires": [
             [
-                "a4f03bd3685bd9df"
+                "211d72aca4ea5575"
             ]
         ]
     },
     {
-        "id": "6055941e8c744a4a",
+        "id": "4703b560fa594d0d",
         "type": "function",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "ToDMXFixtures",
-        "func": "var statusArray = msg.payload.data;\nvar isSolved = msg.payload.solved;\n\nvar lastSentLights = flow.get('lastSentLights') || [0, 0, 0, 0, 0];\nvar lastSolved = flow.get('lastSolved') || false;\n\nif (isSolved !== lastSolved) {\n    if (isSolved === true) {\n        // ==========================================\n        // Puzzle just solved\n        // ==========================================\n\n        // 1. Turn on all 5 lights first and hold the fully lit state for 2 seconds\n        for (let i = 0; i < 5; i++) {\n            if (statusArray[i] !== lastSentLights[i]) {\n                node.send([{ topic: \"/ritual/light/\" + (i + 1), payload: 1 }, null, null]);\n                lastSentLights[i] = 1;\n            }\n        }\n\n        // 2. Schedule the blackout phase: after 2000 ms,\n        //    turn off all lights with a staggered offset\n        setTimeout(function () {\n            for (let i = 0; i < 5; i++) {\n                setTimeout(function () {\n                    node.send([{ topic: \"/ritual/light/\" + (i + 1), payload: 0 }, null, null]);\n                }, i * 30);\n\n                lastSentLights[i] = 0; // Update stored state to OFF\n            }\n            flow.set('lastSentLights', lastSentLights);\n        }, 2000);\n\n        // 3. Send the win animation trigger to output 2.\n        //    This output passes through the downstream delay nodes before\n        //    the final full-light state is restored.\n        node.send([null, { topic: \"/ritual/win_anim\", payload: 1 }, null]);\n\n    } else {\n        // ==========================================\n        // GM reset\n        // ==========================================\n        var resetMsgs = [{ topic: \"/ritual/win_anim\", payload: 0 }];\n        for (var j = 1; j <= 5; j++) resetMsgs.push({ topic: \"/ritual/light/\" + j, payload: 0 });\n\n        node.send([null, null, resetMsgs]); // Use output 3 for immediate reset\n        lastSentLights = [0, 0, 0, 0, 0];\n    }\n\n    flow.set('lastSolved', isSolved);\n    flow.set('lastSentLights', lastSentLights);\n\n    return null; // Exit after solved/reset handling is complete\n}\n\n// ==========================================\n// Normal item placement logic (while unsolved)\n// ==========================================\nif (!isSolved) {\n    for (let i = 0; i < 5; i++) {\n        if (statusArray[i] !== lastSentLights[i]) {\n            // Normal staggered light on/off update\n            setTimeout(function () {\n                node.send([{ topic: \"/ritual/light/\" + (i + 1), payload: statusArray[i] }, null, null]);\n            }, i * 30);\n\n            lastSentLights[i] = statusArray[i];\n        }\n    }\n    flow.set('lastSentLights', lastSentLights);\n}\n\nreturn null;",
+        "func": "// Receive parsed JSON data from Arduino\nvar statusArray = msg.payload.data;\nvar isSolved = msg.payload.solved;\nvar isWrong = msg.payload.wrong || false; \n\nvar lastSentLights = flow.get('lastSentLights') || [0, 0, 0, 0, 0];\nvar lastSolved = flow.get('lastSolved') || false;\n\n// Animation playback state tracker\nvar isAnimPlaying = flow.get('isAnimPlaying') || false; \n\nvar msgsToSend = []; \n\n// 0. Highest priority: wrong item sound effect\nif (isWrong) {\n    msgsToSend.push({ topic: \"/cue/wrong/start\", payload: \"\" });\n}\n\n// 1. Solved / reset state handling\nif (isSolved !== lastSolved) {\n    if (isSolved === true) {\n        // Trigger the QLab win cue immediately\n        msgsToSend.push({ topic: \"/cue/WIN/start\", payload: \"\" });\n\n        // Turn on all 5 individual ritual lights for the highlight moment\n        for (let i = 0; i < 5; i++) {\n            if (statusArray[i] !== lastSentLights[i]) {\n                msgsToSend.push({ topic: \"/ritual/light/\" + (i + 1), payload: 1 });\n                lastSentLights[i] = 1;\n            }\n        }\n\n        // Schedule the blackout phase:\n        // after 2 seconds, turn off the individual lights with a staggered offset\n        setTimeout(function () {\n            for (let i = 0; i < 5; i++) {\n                setTimeout(function () {\n                    node.send([{ topic: \"/ritual/light/\" + (i + 1), payload: 0 }, null, null]);\n                }, i * 30);\n                lastSentLights[i] = 0;\n            }\n            flow.set('lastSentLights', lastSentLights);\n        }, 2000);\n\n        // Precise toggle control:\n        // only send \"1\" to start the win animation if it is not already playing\n        if (!isAnimPlaying) {\n            node.send([null, { topic: \"/ritual/win_anim\", payload: 1 }, null]);\n            flow.set('isAnimPlaying', true); // Update memory: animation is now playing\n        }\n\n    } else {\n        // =====================================\n        // Player removed an item or GM pressed Reset\n        // =====================================\n        var resetMsgs = [];\n        \n        // Precise toggle control:\n        // if the animation is still playing, send a \"1\" to force-toggle it off\n        if (isAnimPlaying) {\n            resetMsgs.push({ topic: \"/ritual/win_anim\", payload: 1 });\n            flow.set('isAnimPlaying', false); // Update memory: animation is now off\n        }\n\n        // Individual ritual lights use flash behavior, so sending 0 releases them\n        for (var j = 1; j <= 5; j++) {\n            resetMsgs.push({ topic: \"/ritual/light/\" + j, payload: 0 });\n        }\n        \n        node.send([null, null, resetMsgs]);\n        lastSentLights = [0, 0, 0, 0, 0];\n    }\n\n    flow.set('lastSolved', isSolved);\n    flow.set('lastSentLights', lastSentLights);\n\n    if (msgsToSend.length > 0) {\n        node.send([msgsToSend, null, null]);\n    }\n    return null; \n}\n\n// 2. Normal item placement logic while the puzzle is unsolved\nif (!isSolved) {\n    for (let i = 0; i < 5; i++) {\n        if (statusArray[i] !== lastSentLights[i]) {\n            \n            // Sound effect for placing a correct item\n            if (statusArray[i] === 1) {\n                msgsToSend.push({ topic: \"/cue/candle/start\", payload: \"\" });\n            }\n\n            // Staggered light update\n            let lightIndex = i + 1;\n            let lightState = statusArray[i];\n            setTimeout(function () {\n                node.send([{ topic: \"/ritual/light/\" + lightIndex, payload: lightState }, null, null]);\n            }, i * 30);\n\n            lastSentLights[i] = statusArray[i];\n        }\n    }\n    flow.set('lastSentLights', lastSentLights);\n}\n\nif (msgsToSend.length > 0) {\n    node.send([msgsToSend, null, null]);\n}\nreturn null;",
         "outputs": 3,
         "timeout": 0,
         "noerr": 0,
@@ -547,20 +546,20 @@
         "y": 560,
         "wires": [
             [
-                "a4f03bd3685bd9df"
+                "211d72aca4ea5575"
             ],
             [
-                "74a384584d0f4dce"
+                "99e2cec751979fbc"
             ],
             [
-                "a4f03bd3685bd9df"
+                "211d72aca4ea5575"
             ]
         ]
     },
     {
-        "id": "e12c138270c22db8",
+        "id": "c8f9ce6029689e1a",
         "type": "inject",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "",
         "props": [
             {
@@ -585,9 +584,9 @@
         ]
     },
     {
-        "id": "9e1d8ea22a383566",
+        "id": "044eac82f8f89f4a",
         "type": "inject",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "",
         "props": [
             {
@@ -612,9 +611,9 @@
         ]
     },
     {
-        "id": "5e7bb71927b7b14d",
+        "id": "37fbf4bed80d8f3f",
         "type": "inject",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "",
         "props": [
             {
@@ -639,9 +638,9 @@
         ]
     },
     {
-        "id": "b578c80a42d69784",
+        "id": "4d919f18c6b32706",
         "type": "inject",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "",
         "props": [
             {
@@ -666,9 +665,9 @@
         ]
     },
     {
-        "id": "62c8d6f9eedfd674",
+        "id": "38905efba5bee514",
         "type": "inject",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "",
         "props": [
             {
@@ -693,9 +692,9 @@
         ]
     },
     {
-        "id": "c54abadbe559a48f",
+        "id": "83b3c03b42348516",
         "type": "inject",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "",
         "props": [
             {
@@ -720,9 +719,9 @@
         ]
     },
     {
-        "id": "1a31f32964129740",
+        "id": "b3271530dc305f37",
         "type": "delay",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "",
         "pauseType": "delay",
         "timeout": "3",
@@ -740,16 +739,16 @@
         "y": 680,
         "wires": [
             [
-                "e8021cc41fd20487"
+                "e57c3c18ef57e0ce"
             ]
         ]
     },
     {
-        "id": "e8021cc41fd20487",
+        "id": "e57c3c18ef57e0ce",
         "type": "function",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "function 1",
-        "func": "// This node is triggered after the upstream delay chain completes\n// (currently 1650 ms + 3 seconds after the win animation trigger)\n\nvar msgs = [];\n// Retrieve the shared lighting state memory\nvar lastSentLights = flow.get('lastSentLights') || [0, 0, 0, 0, 0];\n\n// 1. Force QLC+ win animation OFF\nmsgs.push({ topic: \"/ritual/win_anim\", payload: 0 });\n\n// 2. Turn all 5 ritual lights back on and hold the fully lit state\nfor (var i = 0; i < 5; i++) {\n    msgs.push({ topic: \"/ritual/light/\" + (i + 1), payload: 1 });\n    lastSentLights[i] = 1; // Important: keep memory synchronized with the actual light state\n}\n\n// Save updated memory\nflow.set('lastSentLights', lastSentLights);\n\n// Output the packaged commands directly\nreturn [msgs];",
+        "func": "var msgs = [];\nvar lastSentLights = flow.get('lastSentLights') || [0, 0, 0, 0, 0];\nvar isAnimPlaying = flow.get('isAnimPlaying') || false;\n\n// 1. When the timer ends, send \"1\" to force-toggle the win animation off\nif (isAnimPlaying) {\n    msgs.push({ topic: \"/ritual/win_anim\", payload: 1 });\n    flow.set('isAnimPlaying', false); // Update memory: animation has ended\n}\n\n// 2. Turn all 5 ritual lights back on and hold the fully lit state\nfor (var i = 0; i < 5; i++) {\n    msgs.push({ topic: \"/ritual/light/\" + (i + 1), payload: 1 });\n    lastSentLights[i] = 1; \n}\n\nflow.set('lastSentLights', lastSentLights);\nreturn [msgs];",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -760,17 +759,17 @@
         "y": 680,
         "wires": [
             [
-                "a4f03bd3685bd9df"
+                "211d72aca4ea5575"
             ]
         ]
     },
     {
-        "id": "74a384584d0f4dce",
+        "id": "99e2cec751979fbc",
         "type": "delay",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "",
         "pauseType": "delay",
-        "timeout": "1650",
+        "timeout": "2000",
         "timeoutUnits": "milliseconds",
         "rate": "1",
         "nbRateUnits": "1",
@@ -785,26 +784,26 @@
         "y": 640,
         "wires": [
             [
-                "a4f03bd3685bd9df",
-                "1a31f32964129740"
+                "211d72aca4ea5575",
+                "b3271530dc305f37"
             ]
         ]
     },
     {
-        "id": "b017f774507af36b",
+        "id": "ac1d68a7784fe84e",
         "type": "switch",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
         "name": "",
-        "property": "payload",
+        "property": "topic",
         "propertyType": "msg",
         "rules": [
             {
-                "t": "eq",
+                "t": "cont",
                 "v": "/cue/",
                 "vt": "str"
             },
             {
-                "t": "eq",
+                "t": "cont",
                 "v": "/ritual/",
                 "vt": "str"
             }
@@ -816,17 +815,43 @@
         "y": 500,
         "wires": [
             [
-                "55abef018c6e2e73"
+                "0cf8a841954a3acf"
             ],
             [
-                "677766ae56d64d63"
+                "0de9a8fde3e940d4"
             ]
         ]
     },
     {
-        "id": "0699f61cf8ecf275",
+        "id": "b0e4e5b1bd10244a",
+        "type": "serial in",
+        "z": "33698b568f6037bd",
+        "name": "",
+        "serial": "fdb0e4bbaa203aa0",
+        "x": 110,
+        "y": 160,
+        "wires": [
+            [
+                "c1291bb550f9bce7",
+                "048130df8fbd4a77"
+            ]
+        ]
+    },
+    {
+        "id": "f08903e4deb1e599",
+        "type": "serial out",
+        "z": "33698b568f6037bd",
+        "name": "",
+        "serial": "fdb0e4bbaa203aa0",
+        "x": 690,
+        "y": 920,
+        "wires": []
+    },
+    {
+        "id": "7c9bd924554d01b3",
         "type": "aedes broker",
-        "z": "f4338a68ae18fd22",
+        "z": "33698b568f6037bd",
+        "d": true,
         "name": "Local MQTT Server",
         "mqtt_port": "1883",
         "mqtt_ws_bind": "port",
@@ -842,8 +867,8 @@
         "dburl": "",
         "persist_to_file": false,
         "usetls": false,
-        "x": 150,
-        "y": 80,
+        "x": 110,
+        "y": 20,
         "wires": [
             [],
             []
@@ -903,6 +928,26 @@
         "className": ""
     },
     {
+        "id": "fdb0e4bbaa203aa0",
+        "type": "serial-port",
+        "name": "Arduino nano 33 iot",
+        "serialport": "/dev/ttyACM0",
+        "serialbaud": "115200",
+        "databits": 8,
+        "parity": "none",
+        "stopbits": 1,
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": 10000
+    },
+    {
         "id": "tab_dashboard",
         "type": "ui_tab",
         "name": "Ritual Table",
@@ -911,13 +956,15 @@
         "hidden": false
     },
     {
-        "id": "2c74259a2a268b5f",
+        "id": "c2f05b06c1c689d6",
         "type": "global-config",
         "env": [],
         "modules": {
             "node-red-contrib-ui-led": "0.4.11",
-            "node-red-dashboard": "3.6.5",
-            "node-red-contrib-osc": "1.1.0"
+            "node-red-dashboard": "3.6.6",
+            "node-red-contrib-osc": "1.1.0",
+            "node-red-node-serialport": "2.0.3",
+            "node-red-contrib-aedes": "1.2.0"
         }
     }
 ]

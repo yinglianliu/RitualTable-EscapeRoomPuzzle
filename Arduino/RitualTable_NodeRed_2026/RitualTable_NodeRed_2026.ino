@@ -1,62 +1,48 @@
 /*
  * =======================================================================================
- * Project:    Ritual Table v2 - Interactive RFID Controller
+ * Project:    Ritual Table v3 - USB Serial Master-Slave Controller
  * Author:     Yinglian Liu
- * Date:       Feb 2026
+ * Date:       March 2026
  * =======================================================================================
  * Description:
- * A bi-directional IoT controller designed for an interactive puzzle.
- * It monitors five RFID readers and synchronizes game states with a central server
- * via MQTT (Node-RED). It also supports STANDALONE mode, allowing local operation
- * without Wi-Fi or MQTT.
+ * This version replaces Wi-Fi / MQTT communication with direct USB serial communication.
+ * The Arduino acts as a lower-level hardware controller:
+ * - Reads 5 RFID readers
+ * - Controls LEDs and relays for physical feedback
+ * - Reports puzzle state to Node-RED via JSON over Serial
+ * - Receives admin commands from Node-RED via Serial
  *
- * Integrated Ecosystem:
- * This device acts as a sensor node within the control network:
- * - Node-RED: Central logic and MQTT broker
- * - QLab:     Audio playback (triggered via Node-RED)
- * - QLC+:     DMX lighting control (triggered via Node-RED)
+ * System Architecture:
+ * - Arduino: Sensor and actuator controller
+ * - Node-RED: Central logic, admin control, and audio / lighting routing
  *
  * Key Features:
- * 1. Input: Monitors 5x MFRC522 RFID readers sequentially.
- * 2. Optimization: Uses state-change detection to minimize network traffic
- *    and prevent MQTT flooding.
- * 3. Administrative Control: Allows operators to remotely control the puzzle
- *    through the Node-RED dashboard:
- *    - Force Win: Immediately triggers the solved state
- *    - Remote Reset: Resets the puzzle to its initial state
- * 4. Standalone Mode: Continues operating locally even if the network fails.
+ * 1. Sequentially scans 5 MFRC522 RFID readers.
+ * 2. Sends JSON state updates over Serial only when state changes occur.
+ * 3. Supports startup state synchronization using an "isSync" flag.
+ * 4. Accepts admin commands from Node-RED:
+ *    - R = Reset puzzle
+ *    - F = Force solved state
+ * 5. Keeps all game logic centralized in Node-RED while Arduino handles hardware.
  *
- * MQTT Architecture:
- * - Publishes to:   "demo/ritualtable/status"   (sensor state data)
- * - Subscribes to:  "demo/ritualtable/control"  (admin commands: RESET, FORCE WIN)
+ * Serial Message Format:
+ * {
+ *   "data":[false,false,true,false,false],
+ *   "solved":false,
+ *   "isSync":true
+ * }
  * =======================================================================================
  */
 
 #include <SPI.h>
 #include <MFRC522.h>
-#include <WiFiNINA.h>
-#include <ArduinoMqttClient.h>
-
-// ================== Network Settings ==================
-char ssid[] = "YING";         // Wi-Fi SSID
-char pass[] = "][p709394";    // Wi-Fi password
-
-// IP address of the computer running Node-RED
-const char broker[] = "192.168.137.1";
-int port = 1883;
-
-// MQTT topics
-const char topicStatus[]  = "demo/ritualtable/status";
-const char topicControl[] = "demo/ritualtable/control";
-
-WiFiClient wifiClient;
-MqttClient mqttClient(wifiClient);
 
 const uint8_t Num_Readers = 5;
 const uint8_t ssPins[Num_Readers] = {9, 8, 7, 6, 5};
 const uint8_t rstPin = 10;
 MFRC522 rfid[Num_Readers];
 
+// Target card UIDs
 // Temporary test UIDs; replace these with the actual ritual item tags
 byte targetUIDs[Num_Readers][7] = {
   {0x04, 0xA5, 0xAA, 0xC5, 0x79, 0x00, 0x00},  // Trophy
@@ -68,99 +54,91 @@ byte targetUIDs[Num_Readers][7] = {
 
 byte targetUIDLengths[Num_Readers] = {7, 7, 7, 7, 7};
 
+// GM / admin reset card UID
 byte resetUID[7] = {0xF3, 0x9A, 0x2B, 0xAB, 0x00, 0x00, 0x00};
 const byte resetUIDLength = 4;
 
+// Physical output pins
+// A5 usually maps to 19, and A6 usually maps to 20
 const uint8_t ledPins[] = {4, 3, 2, 19, 20};
 const uint8_t relayPins[Num_Readers] = {A0, A1, A2, A3, A4};
 
 bool cardDetected[] = {false, false, false, false, false};
 bool puzzleSolved = false;
-long lastReconnectAttempt = 0;
 
 void setup() {
+  // 1. Initialize Serial at 115200 baud
+  //    This ensures JSON messages are transmitted quickly with minimal delay
   Serial.begin(115200);
 
   for (uint8_t i = 0; i < Num_Readers; i++) {
-    pinMode(relayPins[i], OUTPUT);
-    digitalWrite(relayPins[i], LOW);
-
-    pinMode(ledPins[i], OUTPUT);
-    digitalWrite(ledPins[i], LOW);
-
-    pinMode(ssPins[i], OUTPUT);
-    digitalWrite(ssPins[i], HIGH);
+    pinMode(relayPins[i], OUTPUT); digitalWrite(relayPins[i], LOW);
+    pinMode(ledPins[i], OUTPUT);   digitalWrite(ledPins[i], LOW);
+    pinMode(ssPins[i], OUTPUT);    digitalWrite(ssPins[i], HIGH);
   }
 
   SPI.begin();
-
   for (uint8_t reader = 0; reader < Num_Readers; reader++) {
     rfid[reader].PCD_Init(ssPins[reader], rstPin);
-    delay(4);
+    delay(4); // Give each reader a short startup delay
   }
 
-  tryConnectNetwork();
+  // 2. Startup ：
+  //    after boot or power recovery, send one full state update with isSync = true
+  delay(1000); 
+  sendSerialState(true);
 }
 
 void loop() {
-  if (!mqttClient.connected()) {
-    long now = millis();
-    if (now - lastReconnectAttempt > 5000) {
-      lastReconnectAttempt = now;
-      tryConnectNetwork();
-    }
-  } else {
-    mqttClient.poll();
+  // ==========================================
+  // 3. Listen for admin commands from Node-RED
+  // ==========================================
+  if (Serial.available() > 0) {
+    char incomingByte = Serial.read();
+    if (incomingByte == 'R' || incomingByte == 'r') resetToInitialState();
+    else if (incomingByte == 'F' || incomingByte == 'f') forceSolve();
   }
 
+  // ==========================================
+  // 4. Core RFID scanning logic
+  // ==========================================
   bool allCorrectCardsDetected = true;
 
-  // Core improvement:
-  // Use a stateChanged flag so MQTT is only published once per loop cycle
-  bool stateChanged = false;
-
   for (uint8_t reader = 0; reader < Num_Readers; reader++) {
-    // Activate only the current reader
-    for (uint8_t i = 0; i < Num_Readers; i++) {
-      digitalWrite(ssPins[i], HIGH);
-    }
+    for (uint8_t i = 0; i < Num_Readers; i++) digitalWrite(ssPins[i], HIGH);
     digitalWrite(ssPins[reader], LOW);
-    delay(10);
+    delay(5); // With networking removed, this can be reduced to 5 ms for faster scanning
 
     if (rfid[reader].PICC_IsNewCardPresent() && rfid[reader].PICC_ReadCardSerial()) {
       byte* uid = rfid[reader].uid.uidByte;
       byte uidSize = rfid[reader].uid.size;
 
       if (compareUID(uid, uidSize, targetUIDs[reader], targetUIDLengths[reader])) {
-        // Correct card detected
-        if (!cardDetected[reader]) {
-          cardDetected[reader] = true;
-          stateChanged = true; // Mark change, but do not publish yet
-        }
-
+        bool wasFalse = !cardDetected[reader];
+        cardDetected[reader] = true;
         digitalWrite(ledPins[reader], HIGH);
         digitalWrite(relayPins[reader], HIGH);
+
+        // Send JSON only when the state changes from "not detected" to "detected"
+        if (wasFalse) sendSerialState(false);
       }
       else if (compareUID(uid, uidSize, resetUID, resetUIDLength)) {
-        // Reset card detected
         resetToInitialState();
-        return; // Exit immediately and begin a new loop cycle
+        return;
       }
       else {
-        // Wrong card detected -> trigger candle flash effect
         flashAllCandles(3, 100);
+        bool wasTrue = cardDetected[reader];
+        cardDetected[reader] = false;
 
-        if (cardDetected[reader]) {
-          cardDetected[reader] = false;
-          stateChanged = true; // Mark change, but do not publish yet
-        }
+        // Send JSON only when the state changes from "detected" to "not detected"
+        if (wasTrue) sendSerialState(false);
       }
 
       rfid[reader].PICC_HaltA();
       rfid[reader].PCD_StopCrypto1();
     }
 
-    // Deactivate the current reader
     digitalWrite(ssPins[reader], HIGH);
 
     if (cardDetected[reader]) {
@@ -173,93 +151,36 @@ void loop() {
     }
   }
 
-  // ================= Centralized State Resolution =================
-
   if (!allCorrectCardsDetected && puzzleSolved) {
     puzzleSolved = false;
-    stateChanged = true;
+    sendSerialState(false);
   }
 
   if (allCorrectCardsDetected && !puzzleSolved) {
     puzzleSolved = true;
-    stateChanged = true;
-  }
-
-  // Publish only once after the full loop finishes
-  if (stateChanged) {
-    sendMqttState();
-  }
-
-  // Run the win animation only after the network update is sent
-  if (allCorrectCardsDetected && stateChanged) {
+    sendSerialState(false);
     playWinAnimation();
   }
 }
 
-// ================== Network / MQTT ==================
-
-void tryConnectNetwork() {
-  Serial.print("Checking Wi-Fi...");
-
-  if (WiFi.status() != WL_CONNECTED) {
-    WiFi.begin(ssid, pass);
-    delay(1000);
-  }
-
-  if (WiFi.status() == WL_CONNECTED && !mqttClient.connected()) {
-    Serial.print(" Wi-Fi connected. Connecting to MQTT... ");
-
-    if (mqttClient.connect(broker, port)) {
-      Serial.println("MQTT connected.");
-      mqttClient.onMessage(onMqttMessage);
-      mqttClient.subscribe(topicControl);
-
-      delay(1500);
-      mqttClient.poll();
-
-      sendMqttState();
-      Serial.println("Initial state update sent to Node-RED.");
-    } else {
-      Serial.print("MQTT connection failed: ");
-      Serial.println(mqttClient.connectError());
-    }
-  }
-  else if (WiFi.status() != WL_CONNECTED) {
-    Serial.println(" Wi-Fi connection failed. Running in standalone mode.");
-  }
-}
-
-void onMqttMessage(int messageSize) {
-  String message = "";
-  while (mqttClient.available()) {
-    message += (char)mqttClient.read();
-  }
-
-  if (message == "R" || message == "r") {
-    resetToInitialState();
-  }
-  else if (message == "F" || message == "f") {
-    forceSolve();
-  }
-}
-
-void sendMqttState() {
-  if (!mqttClient.connected()) {
-    return;
-  }
-
-  mqttClient.beginMessage(topicStatus);
-  mqttClient.print("{\"data\":[");
-
+// ==========================================
+// 5. Core state transmission function:
+//    package the current puzzle state as a JSON message
+// ==========================================
+void sendSerialState(bool isSync) {
+  Serial.print("{\"data\":[");
   for (uint8_t i = 0; i < Num_Readers; i++) {
-    mqttClient.print(cardDetected[i]);
-    if (i < Num_Readers - 1) mqttClient.print(",");
+    Serial.print(cardDetected[i]);
+    if (i < Num_Readers - 1) Serial.print(",");
   }
+  Serial.print("],\"solved\":");
+  Serial.print(puzzleSolved ? "true" : "false");
+  Serial.print(",\"isSync\":");
+  Serial.print(isSync ? "true" : "false");
 
-  mqttClient.print("],\"solved\":");
-  mqttClient.print(puzzleSolved ? "true" : "false");
-  mqttClient.print("}");
-  mqttClient.endMessage();
+  // Critical:
+  // use println() so Node-RED can split packets by the trailing newline
+  Serial.println("}");
 }
 
 void forceSolve() {
@@ -268,9 +189,8 @@ void forceSolve() {
     digitalWrite(ledPins[i], HIGH);
     digitalWrite(relayPins[i], HIGH);
   }
-
   puzzleSolved = true;
-  sendMqttState();
+  sendSerialState(false);
   playWinAnimation();
 }
 
@@ -280,39 +200,31 @@ void resetToInitialState() {
     digitalWrite(ledPins[i], LOW);
     digitalWrite(relayPins[i], LOW);
   }
-
   puzzleSolved = false;
-  sendMqttState();
+  sendSerialState(false);
   delay(1000);
 }
 
 void playWinAnimation() {
   delay(2000);
-
   for (uint8_t repeat = 0; repeat < 3; repeat++) {
-    if (mqttClient.connected()) mqttClient.poll(); // Prevent disconnects during animation
-
     for (uint8_t i = 0; i < Num_Readers; i++) {
       digitalWrite(relayPins[i], HIGH);
       digitalWrite(ledPins[i], HIGH);
       delay(50);
-
       digitalWrite(relayPins[i], LOW);
       digitalWrite(ledPins[i], LOW);
       delay(50);
     }
-
     for (int i = Num_Readers - 1; i >= 0; i--) {
       digitalWrite(relayPins[i], HIGH);
       digitalWrite(ledPins[i], HIGH);
       delay(50);
-
       digitalWrite(relayPins[i], LOW);
       digitalWrite(ledPins[i], LOW);
       delay(50);
     }
   }
-
   for (uint8_t i = 0; i < Num_Readers; i++) {
     digitalWrite(relayPins[i], HIGH);
     digitalWrite(ledPins[i], HIGH);
@@ -321,30 +233,21 @@ void playWinAnimation() {
 
 bool compareUID(byte* uid1, byte uid1Size, byte* uid2, byte uid2Size) {
   if (uid1Size != uid2Size) return false;
-
   for (byte i = 0; i < uid1Size; i++) {
     if (uid1[i] != uid2[i]) return false;
   }
-
   return true;
 }
 
 void flashAllCandles(uint8_t times, unsigned long duration) {
   for (uint8_t t = 0; t < times; t++) {
-    if (mqttClient.connected()) mqttClient.poll(); // Prevent disconnects during animation
-
     for (uint8_t i = 0; i < Num_Readers; i++) {
-      digitalWrite(ledPins[i], HIGH);
-      digitalWrite(relayPins[i], HIGH);
+      digitalWrite(ledPins[i], HIGH); digitalWrite(relayPins[i], HIGH);
     }
-
     delay(duration);
-
     for (uint8_t i = 0; i < Num_Readers; i++) {
-      digitalWrite(ledPins[i], LOW);
-      digitalWrite(relayPins[i], LOW);
+      digitalWrite(ledPins[i], LOW); digitalWrite(relayPins[i], LOW);
     }
-
     delay(duration);
   }
 }

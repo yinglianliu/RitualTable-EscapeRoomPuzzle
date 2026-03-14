@@ -4,16 +4,14 @@
  <Creator>
   <Name>Q Light Controller Plus</Name>
   <Version>5.1.0</Version>
-  <Author>yinglian</Author>
+  <Author>Yinglian Liu</Author>
  </Creator>
  <Engine>
   <InputOutputMap>
    <BeatGenerator BeatType="Disabled" BPM="120"/>
    <Universe Name="Universe 1" ID="0">
-    <Input Plugin="OSC" UID="192.168.10.100" Line="5"/>
-    <Output Plugin="DMX USB" UID="FT245R USB FIFO - DMX Output 1 - (S/N: ENP08X20)" Line="0">
-     <PluginParameters UniverseChannels="20"/>
-    </Output>
+    <Input Plugin="OSC" UID="192.168.137.148" Line="1"/>
+    <Output Plugin="DMX USB" UID="None" Line="0"/>
    </Universe>
    <Universe Name="Universe 2" ID="1"/>
    <Universe Name="Universe 3" ID="2"/>
@@ -133,6 +131,15 @@
    <ShowEnableButton>True</ShowEnableButton>
    <Collapsed>False</Collapsed>
    <Disabled>False</Disabled>
+   <Button Caption="Light OFF" ID="0">
+    <WindowState Visible="True" X="300" Y="300" Width="71" Height="71"/>
+    <Appearance>
+     <BackgroundColor>4282664004</BackgroundColor>
+    </Appearance>
+    <Function ID="4294967295"/>
+    <Action FadeOut="60">StopAll</Action>
+    <Input ID="0" Universe="0" Channel="29037"/>
+   </Button>
    <Button Caption="Amulet" ID="3">
     <WindowState Visible="True" X="300" Y="715" Width="71" Height="71"/>
     <Appearance>
@@ -141,15 +148,6 @@
     <Function ID="3"/>
     <Action Override="0" ForceLTP="0">Flash</Action>
     <Input ID="0" Universe="0" Channel="18300"/>
-   </Button>
-   <Button Caption="Light OFF" ID="0">
-    <WindowState Visible="True" X="300" Y="300" Width="71" Height="71"/>
-    <Appearance>
-     <BackgroundColor>4282664004</BackgroundColor>
-    </Appearance>
-    <Function ID="4294967295"/>
-    <Action FadeOut="60">StopAll</Action>
-    <Input ID="0" Universe="0" Channel="57237"/>
    </Button>
    <Button Caption="RingBox" ID="6">
     <WindowState Visible="True" X="300" Y="902" Width="71" Height="71"/>
@@ -160,14 +158,14 @@
     <Action Override="0" ForceLTP="0">Flash</Action>
     <Input ID="0" Universe="0" Channel="8778"/>
    </Button>
-   <Button Caption="WinAnimation" ID="4">
-    <WindowState Visible="True" X="300" Y="415" Width="85" Height="85"/>
+   <Button Caption="SheetMusic" ID="2">
+    <WindowState Visible="True" X="300" Y="615" Width="76" Height="76"/>
     <Appearance>
      <BackgroundColor>4282664004</BackgroundColor>
     </Appearance>
-    <Function ID="6"/>
-    <Action>Toggle</Action>
-    <Input ID="0" Universe="0" Channel="4998"/>
+    <Function ID="2"/>
+    <Action Override="0" ForceLTP="0">Flash</Action>
+    <Input ID="0" Universe="0" Channel="22261"/>
    </Button>
    <Button Caption="Trophy" ID="1">
     <WindowState Visible="True" X="300" Y="529" Width="71" Height="71"/>
@@ -187,14 +185,14 @@
     <Action Override="0" ForceLTP="0">Flash</Action>
     <Input ID="0" Universe="0" Channel="13251"/>
    </Button>
-   <Button Caption="SheetMusic" ID="2">
-    <WindowState Visible="True" X="300" Y="615" Width="76" Height="76"/>
+   <Button Caption="WinAnimation" ID="4">
+    <WindowState Visible="True" X="300" Y="415" Width="85" Height="85"/>
     <Appearance>
      <BackgroundColor>4282664004</BackgroundColor>
     </Appearance>
-    <Function ID="2"/>
+    <Function ID="6"/>
     <Action Override="0" ForceLTP="0">Flash</Action>
-    <Input ID="0" Universe="0" Channel="22261"/>
+    <Input ID="0" Universe="0" Channel="4998"/>
    </Button>
   </Frame>
   <Frame Caption="Page 2" ID="1">
