@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ritual Table — System Demo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+.page{background:#f0eeea;min-height:100vh;padding:2rem 1rem}
+.sim{max-width:680px;margin:0 auto}
+.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
+.topbar h2{font-size:18px;font-weight:500;color:#2c2c2a}
+.mode-toggle{display:flex;gap:0;border:0.5px solid #d3d1c7;border-radius:8px;overflow:hidden;background:#fff}
+.mode-btn{font-size:12px;padding:6px 16px;border:none;background:transparent;color:#888780;cursor:pointer;font-family:inherit;transition:background 0.15s,color 0.15s}
+.mode-btn.active{background:#534AB7;color:#fff}
+.hint-row{font-size:11px;color:#888780;margin-bottom:1.5rem;padding:8px 12px;background:#fff;border-radius:8px;border:0.5px solid #d3d1c7}
+.section-label{font-size:11px;font-weight:500;color:#888780;letter-spacing:0.06em;text-transform:uppercase;margin-bottom:8px}
+.slots-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:8px}
+.bulbs-row{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:1.5rem}
+.slot{border:0.5px solid #d3d1c7;border-radius:12px;padding:12px 6px;text-align:center;cursor:pointer;background:#fff;transition:background 0.1s,border-color 0.1s;user-select:none;min-height:90px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px}
+.slot:hover{border-color:#b4b2a9;background:#f8f7f4}
+.slot.correct{background:#eeedfe;border-color:#534AB7}
+.slot.flashing{background:#fcebeb;border-color:#A32D2D}
+.slot-icon{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#f1efe8;border:0.5px solid #d3d1c7;font-size:12px;font-weight:500;color:#888780}
+.slot.correct .slot-icon{background:#cecbf6;border-color:#534AB7;color:#3c3489}
+.slot.flashing .slot-icon{background:#f7c1c1;border-color:#A32D2D;color:#791f1f}
+.slot-name{font-size:10px;color:#5f5e5a;font-weight:500}
+.slot.correct .slot-name{color:#3c3489}
+.slot.flashing .slot-name{color:#791f1f}
+.slot-hint{font-size:9px;color:#b4b2a9;margin-top:1px}
+.bulb-wrap{display:flex;flex-direction:column;align-items:center;gap:5px}
+.bulb{width:28px;height:28px;border-radius:50%;border:0.5px solid #d3d1c7;background:#f1efe8;margin:0 auto;transition:background 0.2s,border-color 0.2s}
+.bulb.on{background:#FAC775;border-color:#854F0B}
+.bulb-label{font-size:9px;color:#b4b2a9;text-align:center}
+.bulb-label.on{color:#633806}
+.progress-row{display:flex;align-items:center;gap:12px;margin-bottom:1.5rem}
+.progress-bar-bg{flex:1;height:5px;background:#d3d1c7;border-radius:3px;overflow:hidden}
+.progress-bar-fill{height:100%;border-radius:3px;background:#534AB7;transition:width 0.4s}
+.progress-label{font-size:13px;font-weight:500;color:#2c2c2a;min-width:32px;text-align:right}
+.win-banner{background:#eeedfe;border:0.5px solid #534AB7;border-radius:12px;padding:14px 16px;text-align:center;margin-bottom:1.5rem;display:none}
+.win-banner.show{display:block}
+.win-banner p{font-size:14px;font-weight:500;color:#3c3489}
+.win-banner small{font-size:12px;color:#534AB7}
+.panels{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:1.5rem}
+.panel{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:12px}
+.panel-title{font-size:11px;font-weight:500;color:#888780;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:8px}
+.log-list{display:flex;flex-direction:column;gap:3px;min-height:72px}
+.log-item{font-size:11px;padding:4px 8px;border-radius:8px;display:flex;align-items:flex-start;gap:6px;line-height:1.4}
+.log-item.info{background:#eeedfe;color:#3c3489}
+.log-item.success{background:#eaf3de;color:#27500a}
+.log-item.error{background:#fcebeb;color:#791f1f}
+.log-item.warn{background:#faeeda;color:#633806}
+.log-item.muted{background:#f1efe8;color:#888780}
+.dot{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.dot.info{background:#534AB7}
+.dot.success{background:#639922}
+.dot.error{background:#A32D2D}
+.dot.warn{background:#854F0B}
+.dot.muted{background:#b4b2a9}
+.serial-card{background:#fff;border-radius:8px;padding:9px 12px;font-size:12px;color:#888780;margin-bottom:1.5rem;border:0.5px solid #d3d1c7}
+.serial-card.solved{background:#eaf3de;color:#27500a;border-color:#97c459}
+.serial-card.wrong-state{background:#fcebeb;color:#791f1f;border-color:#f09595}
+.controls{display:flex;gap:8px}
+.btn{font-size:13px;padding:7px 14px;border-radius:8px;border:0.5px solid #d3d1c7;background:#fff;color:#2c2c2a;cursor:pointer;font-family:inherit}
+.btn:hover{background:#f1efe8;border-color:#b4b2a9}
+.btn:active{transform:scale(0.98)}
+.btn.danger{border-color:#A32D2D;color:#791f1f}
+.btn.danger:hover{background:#fcebeb}
+.simple-feed{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:14px;margin-bottom:1.5rem;min-height:120px}
+.feed-list{display:flex;flex-direction:column;gap:6px}
+.feed-item{font-size:13px;padding:8px 12px;border-radius:8px;display:flex;align-items:center;gap:8px;line-height:1.4}
+.feed-item.info{background:#eeedfe;color:#3c3489}
+.feed-item.success{background:#eaf3de;color:#27500a}
+.feed-item.error{background:#fcebeb;color:#791f1f}
+.feed-item.warn{background:#faeeda;color:#633806}
+.feed-item.muted{background:#f1efe8;color:#888780}
+.feed-icon{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:500}
+.feed-icon.info{background:#cecbf6;color:#3c3489}
+.feed-icon.success{background:#c0dd97;color:#27500a}
+.feed-icon.error{background:#f7c1c1;color:#791f1f}
+.feed-icon.warn{background:#fac775;color:#633806}
+.feed-icon.muted{background:#d3d1c7;color:#5f5e5a}
+.status-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.5rem}
+.stat{background:#fff;border:0.5px solid #d3d1c7;border-radius:8px;padding:10px 12px}
+.stat-label{font-size:11px;color:#888780;margin-bottom:2px}
+.stat-value{font-size:15px;font-weight:500;color:#2c2c2a}
+.stat-value.on{color:#534AB7}
+.hidden{display:none}
+</style>
+</head>
+<body>
+<div class="page">
+<div class="sim">
+
+  <div class="topbar">
+    <h2>Ritual Table — demo</h2>
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="btn-overview" onclick="setMode('overview')">Overview</button>
+      <button class="mode-btn" id="btn-tech" onclick="setMode('tech')">Technical</button>
+    </div>
+  </div>
+
+  <div class="hint-row" id="hint-overview">
+    Click a slot to place the ritual item. Click an occupied slot to try replacing it with the wrong item.
+  </div>
+  <div class="hint-row hidden" id="hint-tech">
+    Left click empty = correct item &nbsp;·&nbsp; Left click occupied = wrong replacement &nbsp;·&nbsp; Right click empty = wrong item
+  </div>
+
+  <div class="section-label">Ritual item slots</div>
+  <div class="slots-row" id="slots"></div>
+
+  <div class="section-label">Candle lights (relay feedback)</div>
+  <div class="bulbs-row" id="bulbs"></div>
+
+  <div class="progress-row">
+    <div class="section-label" style="margin:0;white-space:nowrap">Progress</div>
+    <div class="progress-bar-bg"><div class="progress-bar-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="progress-label" id="prog-label">0 / 5</div>
+  </div>
+
+  <div class="win-banner" id="win-banner">
+    <p>Puzzle solved — ritual complete</p>
+    <small>Win lighting sequence and audio are now playing</small>
+  </div>
+
+  <div id="overview-panel">
+    <div class="section-label">What's happening</div>
+    <div class="simple-feed">
+      <div class="feed-list" id="feed-list">
+        <div class="feed-item muted"><div class="feed-icon muted">—</div>Waiting for items to be placed...</div>
+      </div>
+    </div>
+    <div class="status-summary">
+      <div class="stat">
+        <div class="stat-label">Audio (QLab)</div>
+        <div class="stat-value" id="simple-qlab">Standby</div>
+      </div>
+      <div class="stat">
+        <div class="stat-label">Lighting (QLC+)</div>
+        <div class="stat-value" id="simple-qlc">All off</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tech-panel" class="hidden">
+    <div class="panels">
+      <div class="panel">
+        <div class="panel-title">QLab (audio cues)</div>
+        <div class="log-list" id="qlab-log"><div class="log-item muted"><span class="dot muted"></span>Waiting...</div></div>
+      </div>
+      <div class="panel">
+        <div class="panel-title">QLC+ (DMX lighting)</div>
+        <div class="log-list" id="qlc-log"><div class="log-item muted"><span class="dot muted"></span>Waiting...</div></div>
+      </div>
+    </div>
+    <div class="section-label">Serial output — Arduino → Node-RED</div>
+    <div class="serial-card" id="serial-card">
+      <code id="serial-out">{"data":[0,0,0,0,0],"solved":false,"wrong":false}</code>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn danger" onclick="resetAll()">Reset puzzle</button>
+    <button class="btn" onclick="forceWin()">Force win</button>
+  </div>
+
+</div>
+</div>
+
+<script>
+const ITEMS=["Trophy","Sheet Music","Amulet","Journal","Ring Box"];
+const ICONS=["T","S","A","J","R"];
+let state=[false,false,false,false,false];
+let relayOn=[false,false,false,false,false];
+let dmxOn=[false,false,false,false,false];
+let solved=false;
+let flashTimers=[null,null,null,null,null];
+let lockInput=false;
+
+function setMode(m){
+  document.getElementById('btn-overview').className='mode-btn'+(m==='overview'?' active':'');
+  document.getElementById('btn-tech').className='mode-btn'+(m==='tech'?' active':'');
+  document.getElementById('overview-panel').className=m==='overview'?'':'hidden';
+  document.getElementById('tech-panel').className=m==='tech'?'':'hidden';
+  document.getElementById('hint-overview').className='hint-row'+(m==='overview'?'':' hidden');
+  document.getElementById('hint-tech').className='hint-row'+(m==='tech'?'':' hidden');
+}
+
+function renderSlots(){
+  const c=document.getElementById('slots');
+  c.innerHTML='';
+  ITEMS.forEach((name,i)=>{
+    const d=document.createElement('div');
+    d.className='slot'+(state[i]?' correct':'');
+    d.innerHTML=`<div class="slot-icon">${ICONS[i]}</div><div class="slot-name">${name}</div><div class="slot-hint">${state[i]?'placed':'empty'}</div>`;
+    d.onclick=()=>handleLeftClick(i);
+    d.oncontextmenu=(e)=>{e.preventDefault();handleRightClick(i);};
+    c.appendChild(d);
+  });
+}
+
+function renderBulbs(){
+  const c=document.getElementById('bulbs');
+  c.innerHTML='';
+  ITEMS.forEach((name,i)=>{
+    const wrap=document.createElement('div');
+    wrap.className='bulb-wrap';
+    const b=document.createElement('div');
+    b.className='bulb'+(relayOn[i]?' on':'');
+    const lbl=document.createElement('div');
+    lbl.className='bulb-label'+(relayOn[i]?' on':'');
+    lbl.textContent=relayOn[i]?'on':'off';
+    wrap.appendChild(b);
+    wrap.appendChild(lbl);
+    c.appendChild(wrap);
+  });
+}
+
+function handleLeftClick(i){
+  if(solved||lockInput) return;
+  if(!state[i]) placeCorrect(i);
+  else triggerWrong(i,true);
+}
+
+function handleRightClick(i){
+  if(solved||lockInput||state[i]) return;
+  triggerWrong(i,false);
+}
+
+function placeCorrect(i){
+  state[i]=true;
+  relayOn[i]=true;
+  dmxOn[i]=true;
+  addFeed('info','✓',`${ITEMS[i]} placed correctly — candle light on, audio cue triggered`);
+  updateSimpleStatus();
+  addLog('qlab','info','/cue/CANDLE/start');
+  addLog('qlc','info',`/ritual/light/${i+1}  →  1`);
+  updateSerial(false);
+  renderSlots();
+  renderBulbs();
+  checkSolved();
+}
+
+function triggerWrong(i,wasOccupied){
+  lockInput=true;
+  if(wasOccupied){
+    state[i]=false;
+    dmxOn[i]=false;
+    addFeed('error','✕',`Wrong item on ${ITEMS[i]} — light turned off, error sound playing`);
+    addLog('qlc','warn',`/ritual/light/${i+1}  →  0`);
+  } else {
+    addFeed('error','✕','Wrong item placed — error sound playing, lights flashing');
+  }
+  addLog('qlab','error','/cue/WRONG/start');
+  updateSimpleStatus('error');
+  updateSerial(true);
+  document.getElementById('serial-card').className='serial-card wrong-state';
+  clearTimeout(flashTimers[i]);
+  let flashCount=0;
+  function doFlash(){
+    relayOn[i]=flashCount%2===0;
+    const slotEls=document.getElementById('slots').children;
+    if(slotEls[i]) slotEls[i].className='slot'+(flashCount%2===0?' flashing':'');
+    renderBulbs();
+    flashCount++;
+    if(flashCount<6) flashTimers[i]=setTimeout(doFlash,150);
+    else{
+      relayOn[i]=false;
+      state[i]=false;
+      renderSlots();
+      renderBulbs();
+      document.getElementById('serial-card').className='serial-card';
+      updateSerial(false);
+      updateSimpleStatus();
+      lockInput=false;
+    }
+  }
+  doFlash();
+}
+
+function checkSolved(){
+  if(state.every(Boolean)&&!solved){
+    solved=true;
+    setTimeout(()=>{
+      document.getElementById('win-banner').classList.add('show');
+      addFeed('success','★','All 5 items placed — ritual complete! Win lighting and audio sequence now playing.');
+      updateSimpleStatus('win');
+      addLog('qlab','success','/cue/WIN/start');
+      addLog('qlc','success','/ritual/timeline/start');
+      setTimeout(()=>addLog('qlc','success','/ritual/win_anim  →  1'),400);
+      setTimeout(()=>{
+        addLog('qlc','success','All lights hold on');
+        addLog('qlc','muted','/ritual/win_anim  →  0');
+      },1200);
+      updateSerial(false,true);
+      document.getElementById('serial-card').className='serial-card solved';
+    },200);
+  }
+}
+
+function updateSimpleStatus(override){
+  const count=state.filter(Boolean).length;
+  const qlabEl=document.getElementById('simple-qlab');
+  const qlcEl=document.getElementById('simple-qlc');
+  if(override==='win'){
+    qlabEl.textContent='Win audio playing';qlabEl.className='stat-value on';
+    qlcEl.textContent='Win sequence active';qlcEl.className='stat-value on';
+  } else if(override==='error'){
+    qlabEl.textContent='Error sound triggered';qlabEl.className='stat-value';
+    qlcEl.textContent=count+' light'+(count!==1?'s':'')+' on';qlcEl.className=count>0?'stat-value on':'stat-value';
+  } else {
+    qlabEl.textContent=count>0?'Candle cue triggered':'Standby';qlabEl.className=count>0?'stat-value on':'stat-value';
+    qlcEl.textContent=count>0?count+' light'+(count!==1?'s':'')+' on':'All off';qlcEl.className=count>0?'stat-value on':'stat-value';
+  }
+}
+
+function addFeed(type,icon,msg){
+  const list=document.getElementById('feed-list');
+  const muted=list.querySelector('.muted');
+  if(muted) muted.remove();
+  const item=document.createElement('div');
+  item.className=`feed-item ${type}`;
+  item.innerHTML=`<div class="feed-icon ${type}">${icon}</div><span>${msg}</span>`;
+  list.appendChild(item);
+  if(list.children.length>5) list.removeChild(list.firstChild);
+}
+
+function addLog(target,type,msg){
+  const id=target==='qlab'?'qlab-log':'qlc-log';
+  const list=document.getElementById(id);
+  const muted=list.querySelector('.muted');
+  if(muted) muted.remove();
+  const item=document.createElement('div');
+  item.className=`log-item ${type}`;
+  item.innerHTML=`<span class="dot ${type}"></span><code style="font-size:10px">${msg}</code>`;
+  list.appendChild(item);
+  if(list.children.length>6) list.removeChild(list.firstChild);
+}
+
+function updateSerial(wrong=false,forceSolved=false){
+  const d=state.map(v=>v?1:0);
+  const s=solved||forceSolved;
+  document.getElementById('serial-out').textContent=
+    `{"data":[${d.join(',')}],"solved":${s},"wrong":${wrong}}`;
+  document.getElementById('prog-fill').style.width=(state.filter(Boolean).length/5*100)+'%';
+  document.getElementById('prog-label').textContent=state.filter(Boolean).length+' / 5';
+}
+
+function resetAll(){
+  state=[false,false,false,false,false];
+  relayOn=[false,false,false,false,false];
+  dmxOn=[false,false,false,false,false];
+  solved=false;lockInput=false;
+  flashTimers.forEach(t=>clearTimeout(t));
+  flashTimers=[null,null,null,null,null];
+  document.getElementById('win-banner').classList.remove('show');
+  document.getElementById('serial-card').className='serial-card';
+  document.getElementById('qlab-log').innerHTML='<div class="log-item muted"><span class="dot muted"></span>Waiting...</div>';
+  document.getElementById('qlc-log').innerHTML='<div class="log-item muted"><span class="dot muted"></span>Waiting...</div>';
+  document.getElementById('feed-list').innerHTML='<div class="feed-item muted"><div class="feed-icon muted">—</div>Puzzle reset — waiting for items to be placed...</div>';
+  addLog('qlab','warn','/cue/WIN/cancel');
+  addLog('qlc','warn','All lights  →  0');
+  updateSerial(false);
+  updateSimpleStatus();
+  renderSlots();
+  renderBulbs();
+}
+
+function forceWin(){
+  if(lockInput) return;
+  state=[true,true,true,true,true];
+  relayOn=[true,true,true,true,true];
+  dmxOn=[true,true,true,true,true];
+  solved=false;
+  document.getElementById('serial-card').className='serial-card';
+  updateSerial(false);
+  renderSlots();
+  renderBulbs();
+  checkSolved();
+}
+
+renderSlots();
+renderBulbs();
+updateSerial();
+</script>
+</body>
+</html>

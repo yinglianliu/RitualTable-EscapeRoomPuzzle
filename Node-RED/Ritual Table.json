@@ -2,29 +2,9 @@
     {
         "id": "33698b568f6037bd",
         "type": "tab",
-        "label": "Ritual Table Serial",
+        "label": "Ritual Table Serial MQTT",
         "disabled": false,
         "info": ""
-    },
-    {
-        "id": "38e1eeefd413df85",
-        "type": "mqtt in",
-        "z": "33698b568f6037bd",
-        "d": true,
-        "name": "ReceivingData",
-        "topic": "demo/ritualtable/status",
-        "qos": "0",
-        "datatype": "auto",
-        "broker": "e3685db063ce93e9",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 100,
-        "y": 80,
-        "wires": [
-            []
-        ]
     },
     {
         "id": "c1291bb550f9bce7",
@@ -34,12 +14,11 @@
         "property": "payload",
         "action": "",
         "pretty": false,
-        "x": 310,
-        "y": 200,
+        "x": 1370,
+        "y": 160,
         "wires": [
             [
                 "9c6a3aa4a1a167e8",
-                "66c76f990291ae40",
                 "4703b560fa594d0d"
             ]
         ]
@@ -56,8 +35,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 480,
-        "y": 200,
+        "x": 1660,
+        "y": 160,
         "wires": [
             [
                 "2d93a8d3ccf33feb"
@@ -106,8 +85,8 @@
         "shape": "circle",
         "showGlow": true,
         "name": "",
-        "x": 790,
-        "y": 100,
+        "x": 1970,
+        "y": 72,
         "wires": []
     },
     {
@@ -137,8 +116,8 @@
         "shape": "circle",
         "showGlow": true,
         "name": "",
-        "x": 790,
-        "y": 144,
+        "x": 1970,
+        "y": 116,
         "wires": []
     },
     {
@@ -168,8 +147,8 @@
         "shape": "circle",
         "showGlow": true,
         "name": "",
-        "x": 790,
-        "y": 188,
+        "x": 1970,
+        "y": 160,
         "wires": []
     },
     {
@@ -199,8 +178,8 @@
         "shape": "circle",
         "showGlow": true,
         "name": "",
-        "x": 790,
-        "y": 232,
+        "x": 1970,
+        "y": 204,
         "wires": []
     },
     {
@@ -230,8 +209,8 @@
         "shape": "circle",
         "showGlow": true,
         "name": "",
-        "x": 790,
-        "y": 276,
+        "x": 1970,
+        "y": 248,
         "wires": []
     },
     {
@@ -251,81 +230,8 @@
         "font": "",
         "fontSize": "",
         "color": "#000000",
-        "x": 800,
-        "y": 320,
-        "wires": []
-    },
-    {
-        "id": "e230f83350d033a4",
-        "type": "ui_button",
-        "z": "33698b568f6037bd",
-        "d": true,
-        "name": "",
-        "group": "grp_control",
-        "order": 3,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "⚠️ RESET PUZZLE",
-        "tooltip": "",
-        "color": "white",
-        "bgcolor": "red",
-        "className": "",
-        "icon": "",
-        "payload": "R",
-        "payloadType": "str",
-        "topic": "demo/ritualtable/control",
-        "topicType": "str",
-        "x": 360,
-        "y": 1160,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "b4893aaa3092b14a",
-        "type": "ui_button",
-        "z": "33698b568f6037bd",
-        "d": true,
-        "name": "",
-        "group": "grp_control",
-        "order": 4,
-        "width": 0,
-        "height": 0,
-        "passthru": false,
-        "label": "FORCE WIN",
-        "tooltip": "",
-        "color": "",
-        "bgcolor": "orange",
-        "className": "",
-        "icon": "",
-        "payload": "F",
-        "payloadType": "str",
-        "topic": "demo/ritualtable/control",
-        "topicType": "str",
-        "x": 340,
-        "y": 1220,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "f4f2613ddfdd7881",
-        "type": "mqtt out",
-        "z": "33698b568f6037bd",
-        "d": true,
-        "name": "SendingCMD",
-        "topic": "",
-        "qos": "",
-        "retain": "",
-        "respTopic": "",
-        "contentType": "",
-        "userProps": "",
-        "correl": "",
-        "expiry": "",
-        "broker": "e3685db063ce93e9",
-        "x": 690,
-        "y": 1020,
+        "x": 1980,
+        "y": 292,
         "wires": []
     },
     {
@@ -341,8 +247,8 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 370,
-        "y": 100,
+        "x": 950,
+        "y": 80,
         "wires": []
     },
     {
@@ -354,17 +260,18 @@
         "order": 2,
         "width": 0,
         "height": 0,
-        "format": "<div layout=\"row\" layout-align=\"center center\">\n    <md-button class=\"md-raised\" style=\"background-color: orange; color: white; width: 100%; font-weight: bold;\"\n        ng-click=\"checkForceWin()\">\n        ⚠️ FORCE WIN\n    </md-button>\n</div>\n\n<script>\n    (function($scope) {\n    // \n    $scope.checkForceWin = function() {\n        // \n        var result = confirm(\"⚠️ Warning ⚠️\\n\\nAre you sure you want to force the puzzle into the solved state?\\nThis will trigger the win lighting and animation sequence.\");\n        \n        if (result) {\n            // \n            $scope.send({\n                payload: \"F\", \n                topic: \"demo/ritualtable/control\" \n            });\n        }\n    }\n})(scope);\n</script>",
+        "format": "<div layout=\"row\" layout-align=\"center center\">\n    <md-button class=\"md-raised\" style=\"background-color: orange; color: white; width: 100%; font-weight: bold;\"\n        ng-click=\"checkForceWin()\">\n        ⚠️ FORCE WIN\n    </md-button>\n</div>\n\n<script>\n    (function($scope) {\n    // \n    $scope.checkForceWin = function() {\n        // \n        var result = confirm(\"⚠️ Warning ⚠️\\n\\nAre you sure you want to force the puzzle into the solved state?\\nThis will trigger the win lighting and animation sequence.\");\n        \n        if (result) {\n            // \n            $scope.send({\n                payload: \"F\"\n            });\n        }\n    }\n})(scope);\n</script>",
         "storeOutMessages": true,
         "fwdInMessages": true,
         "resendOnRefresh": true,
         "templateScope": "local",
         "className": "",
-        "x": 410,
-        "y": 960,
+        "x": 740,
+        "y": 900,
         "wires": [
             [
-                "f08903e4deb1e599"
+                "f08903e4deb1e599",
+                "02a76c79556a2470"
             ]
         ]
     },
@@ -377,18 +284,18 @@
         "order": 1,
         "width": 0,
         "height": 0,
-        "format": "<div layout=\"row\" layout-align=\"center center\">\n    <md-button class=\"md-raised\" style=\"background-color: red; color: white; width: 100%; font-weight: bold;\"\n        ng-click=\"checkResetPuzzle()\">\n        ⚠️ RESET PUZZLE\n    </md-button>\n</div>\n\n<script>\n    (function($scope) {\n    // \n    $scope.checkResetPuzzle = function() {\n        // \n        var result = confirm(\"⚠️ Warning ⚠️\\n\\nAre you sure you want to reset the puzzle?\\nThis will clear all current progress.\");\n        \n        if (result) {\n            // \n            $scope.send({\n                payload: \"R\", \n                topic: \"demo/ritualtable/control\" \n            });\n        }\n    }\n})(scope);\n</script>",
+        "format": "<div layout=\"row\" layout-align=\"center center\">\n    <md-button class=\"md-raised\" style=\"background-color: red; color: white; width: 100%; font-weight: bold;\"\n        ng-click=\"checkResetPuzzle()\">\n        ⚠️ RESET PUZZLE\n    </md-button>\n</div>\n\n<script>\n    (function($scope) {\n    // \n    $scope.checkResetPuzzle = function() {\n        // \n        var result = confirm(\"⚠️ Warning ⚠️\\n\\nAre you sure you want to reset the puzzle?\\nThis will clear all current progress.\");\n        \n        if (result) {\n            // \n            $scope.send({\n                payload: \"R\"\n            });\n        }\n    }\n})(scope);\n</script>",
         "storeOutMessages": true,
         "fwdInMessages": true,
         "resendOnRefresh": true,
         "templateScope": "local",
         "className": "",
-        "x": 410,
-        "y": 880,
+        "x": 750,
+        "y": 700,
         "wires": [
             [
-                "147ebdd2cd0ad99b",
-                "f08903e4deb1e599"
+                "f08903e4deb1e599",
+                "6b0c3c2a64bc04b0"
             ]
         ]
     },
@@ -399,8 +306,8 @@
         "name": "",
         "path": "",
         "metadata": false,
-        "x": 1230,
-        "y": 500,
+        "x": 2350,
+        "y": 1240,
         "wires": [
             [
                 "ac1d68a7784fe84e"
@@ -412,380 +319,50 @@
         "type": "udp out",
         "z": "33698b568f6037bd",
         "name": "Qlab",
-        "addr": "192.168.10.100",
+        "addr": "192.168.137.148",
         "iface": "",
         "port": "53000",
         "ipv": "udp4",
         "outport": "",
         "base64": false,
         "multicast": "false",
-        "x": 1550,
-        "y": 420,
+        "x": 2730,
+        "y": 1160,
         "wires": []
-    },
-    {
-        "id": "66c76f990291ae40",
-        "type": "switch",
-        "z": "33698b568f6037bd",
-        "name": "",
-        "property": "payload.solved",
-        "propertyType": "msg",
-        "rules": [
-            {
-                "t": "true"
-            }
-        ],
-        "checkall": "true",
-        "repair": false,
-        "outputs": 1,
-        "x": 470,
-        "y": 460,
-        "wires": [
-            [
-                "3ac6485596667e3d"
-            ]
-        ]
-    },
-    {
-        "id": "3ac6485596667e3d",
-        "type": "change",
-        "z": "33698b568f6037bd",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "topic",
-                "pt": "msg",
-                "to": "/cue/WIN/start",
-                "tot": "str"
-            },
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "[]",
-                "tot": "str"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 700,
-        "y": 460,
-        "wires": [
-            [
-                "211d72aca4ea5575"
-            ]
-        ]
     },
     {
         "id": "0de9a8fde3e940d4",
         "type": "udp out",
         "z": "33698b568f6037bd",
         "name": "QLC",
-        "addr": "192.168.10.100",
+        "addr": "192.168.137.148",
         "iface": "",
         "port": "7700",
         "ipv": "udp4",
         "outport": "",
         "base64": false,
         "multicast": "false",
-        "x": 1550,
-        "y": 560,
+        "x": 2730,
+        "y": 1300,
         "wires": []
-    },
-    {
-        "id": "147ebdd2cd0ad99b",
-        "type": "change",
-        "z": "33698b568f6037bd",
-        "name": "",
-        "rules": [
-            {
-                "t": "set",
-                "p": "topic",
-                "pt": "msg",
-                "to": "/table/light/off",
-                "tot": "str"
-            },
-            {
-                "t": "set",
-                "p": "payload",
-                "pt": "msg",
-                "to": "1.0",
-                "tot": "num"
-            }
-        ],
-        "action": "",
-        "property": "",
-        "from": "",
-        "to": "",
-        "reg": false,
-        "x": 1040,
-        "y": 880,
-        "wires": [
-            [
-                "211d72aca4ea5575"
-            ]
-        ]
     },
     {
         "id": "4703b560fa594d0d",
         "type": "function",
         "z": "33698b568f6037bd",
-        "name": "ToDMXFixtures",
-        "func": "// Receive parsed JSON data from Arduino\nvar statusArray = msg.payload.data;\nvar isSolved = msg.payload.solved;\nvar isWrong = msg.payload.wrong || false; \n\nvar lastSentLights = flow.get('lastSentLights') || [0, 0, 0, 0, 0];\nvar lastSolved = flow.get('lastSolved') || false;\n\n// Animation playback state tracker\nvar isAnimPlaying = flow.get('isAnimPlaying') || false; \n\nvar msgsToSend = []; \n\n// 0. Highest priority: wrong item sound effect\nif (isWrong) {\n    msgsToSend.push({ topic: \"/cue/wrong/start\", payload: \"\" });\n}\n\n// 1. Solved / reset state handling\nif (isSolved !== lastSolved) {\n    if (isSolved === true) {\n        // Trigger the QLab win cue immediately\n        msgsToSend.push({ topic: \"/cue/WIN/start\", payload: \"\" });\n\n        // Turn on all 5 individual ritual lights for the highlight moment\n        for (let i = 0; i < 5; i++) {\n            if (statusArray[i] !== lastSentLights[i]) {\n                msgsToSend.push({ topic: \"/ritual/light/\" + (i + 1), payload: 1 });\n                lastSentLights[i] = 1;\n            }\n        }\n\n        // Schedule the blackout phase:\n        // after 2 seconds, turn off the individual lights with a staggered offset\n        setTimeout(function () {\n            for (let i = 0; i < 5; i++) {\n                setTimeout(function () {\n                    node.send([{ topic: \"/ritual/light/\" + (i + 1), payload: 0 }, null, null]);\n                }, i * 30);\n                lastSentLights[i] = 0;\n            }\n            flow.set('lastSentLights', lastSentLights);\n        }, 2000);\n\n        // Precise toggle control:\n        // only send \"1\" to start the win animation if it is not already playing\n        if (!isAnimPlaying) {\n            node.send([null, { topic: \"/ritual/win_anim\", payload: 1 }, null]);\n            flow.set('isAnimPlaying', true); // Update memory: animation is now playing\n        }\n\n    } else {\n        // =====================================\n        // Player removed an item or GM pressed Reset\n        // =====================================\n        var resetMsgs = [];\n        \n        // Precise toggle control:\n        // if the animation is still playing, send a \"1\" to force-toggle it off\n        if (isAnimPlaying) {\n            resetMsgs.push({ topic: \"/ritual/win_anim\", payload: 1 });\n            flow.set('isAnimPlaying', false); // Update memory: animation is now off\n        }\n\n        // Individual ritual lights use flash behavior, so sending 0 releases them\n        for (var j = 1; j <= 5; j++) {\n            resetMsgs.push({ topic: \"/ritual/light/\" + j, payload: 0 });\n        }\n        \n        node.send([null, null, resetMsgs]);\n        lastSentLights = [0, 0, 0, 0, 0];\n    }\n\n    flow.set('lastSolved', isSolved);\n    flow.set('lastSentLights', lastSentLights);\n\n    if (msgsToSend.length > 0) {\n        node.send([msgsToSend, null, null]);\n    }\n    return null; \n}\n\n// 2. Normal item placement logic while the puzzle is unsolved\nif (!isSolved) {\n    for (let i = 0; i < 5; i++) {\n        if (statusArray[i] !== lastSentLights[i]) {\n            \n            // Sound effect for placing a correct item\n            if (statusArray[i] === 1) {\n                msgsToSend.push({ topic: \"/cue/candle/start\", payload: \"\" });\n            }\n\n            // Staggered light update\n            let lightIndex = i + 1;\n            let lightState = statusArray[i];\n            setTimeout(function () {\n                node.send([{ topic: \"/ritual/light/\" + lightIndex, payload: lightState }, null, null]);\n            }, i * 30);\n\n            lastSentLights[i] = statusArray[i];\n        }\n    }\n    flow.set('lastSentLights', lastSentLights);\n}\n\nif (msgsToSend.length > 0) {\n    node.send([msgsToSend, null, null]);\n}\nreturn null;",
-        "outputs": 3,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 480,
-        "y": 560,
-        "wires": [
-            [
-                "211d72aca4ea5575"
-            ],
-            [
-                "99e2cec751979fbc"
-            ],
-            [
-                "211d72aca4ea5575"
-            ]
-        ]
-    },
-    {
-        "id": "c8f9ce6029689e1a",
-        "type": "inject",
-        "z": "33698b568f6037bd",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "/ritual/light/1",
-        "payload": "1",
-        "payloadType": "num",
-        "x": 130,
-        "y": 320,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "044eac82f8f89f4a",
-        "type": "inject",
-        "z": "33698b568f6037bd",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "/ritual/light/2",
-        "payload": "1",
-        "payloadType": "num",
-        "x": 130,
-        "y": 380,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "37fbf4bed80d8f3f",
-        "type": "inject",
-        "z": "33698b568f6037bd",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "/ritual/light/3",
-        "payload": "1",
-        "payloadType": "num",
-        "x": 130,
-        "y": 440,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "4d919f18c6b32706",
-        "type": "inject",
-        "z": "33698b568f6037bd",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "/ritual/light/4",
-        "payload": "1",
-        "payloadType": "num",
-        "x": 130,
-        "y": 500,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "38905efba5bee514",
-        "type": "inject",
-        "z": "33698b568f6037bd",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "/ritual/light/5",
-        "payload": "1",
-        "payloadType": "num",
-        "x": 130,
-        "y": 560,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "83b3c03b42348516",
-        "type": "inject",
-        "z": "33698b568f6037bd",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "/ritual/win_anim",
-        "payload": "1",
-        "payloadType": "num",
-        "x": 145.21429443359375,
-        "y": 620,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "b3271530dc305f37",
-        "type": "delay",
-        "z": "33698b568f6037bd",
-        "name": "",
-        "pauseType": "delay",
-        "timeout": "3",
-        "timeoutUnits": "seconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 880,
-        "y": 680,
-        "wires": [
-            [
-                "e57c3c18ef57e0ce"
-            ]
-        ]
-    },
-    {
-        "id": "e57c3c18ef57e0ce",
-        "type": "function",
-        "z": "33698b568f6037bd",
-        "name": "function 1",
-        "func": "var msgs = [];\nvar lastSentLights = flow.get('lastSentLights') || [0, 0, 0, 0, 0];\nvar isAnimPlaying = flow.get('isAnimPlaying') || false;\n\n// 1. When the timer ends, send \"1\" to force-toggle the win animation off\nif (isAnimPlaying) {\n    msgs.push({ topic: \"/ritual/win_anim\", payload: 1 });\n    flow.set('isAnimPlaying', false); // Update memory: animation has ended\n}\n\n// 2. Turn all 5 ritual lights back on and hold the fully lit state\nfor (var i = 0; i < 5; i++) {\n    msgs.push({ topic: \"/ritual/light/\" + (i + 1), payload: 1 });\n    lastSentLights[i] = 1; \n}\n\nflow.set('lastSentLights', lastSentLights);\nreturn [msgs];",
+        "name": "SystemConductor",
+        "func": "\nvar statusArray = msg.payload.data;\nvar isSolved = msg.payload.solved;\nvar isWrong = msg.payload.wrong || false; \n\nvar lastSentLights = flow.get('lastSentLights') || [0, 0, 0, 0, 0];\nvar lastSolved = flow.get('lastSolved') || false;\nvar isAnimPlaying = flow.get('isAnimPlaying') || false; \n\nvar msgsToSend = []; // Unified broadcast packet\n\n// 0. Wrong placement alarm\nif (isWrong) msgsToSend.push({ topic: \"/cue/WRONG/start\", payload: \"\" });\n\n// 1. Solved / reset state handling\nif (isSolved !== lastSolved) {\n    if (isSolved === true) {\n       // 1. Starting signal: launch the timeline trigger\n       msgsToSend.push({ topic: \"/ritual/timeline/start\", payload: \"\" });\n\n        // 2. Dramatic blackout: force all 5 individual lights OFF\n        //    while the downstream effects system takes over\n        for (let i = 0; i < 5; i++) {\n            msgsToSend.push({ topic: \"/ritual/light/\" + (i + 1), payload: 0 });\n            lastSentLights[i] = 0; // Store the current OFF state\n        }\n\n        // Note: the actual animation trigger is no longer sent here.\n        // It is now handled by the dedicated timeline branch below.\n        flow.set('isAnimPlaying', true); // Internal state marker only\n    } else {\n        // Reset the game: send 0 to turn off all individual lights\n        // and reset the QLC+ animation button state\n        for (var j = 1; j <= 5; j++) msgsToSend.push({ topic: \"/ritual/light/\" + j, payload: 0 });\n        msgsToSend.push({ topic: \"/ritual/win_anim\", payload: 0 }); // Stop any stuck toggle animation\n        \n        msgsToSend.push({ topic: \"/cue/WIN/cancel\", payload: \"\" });\n        msgsToSend.push({ topic: \"/cue/WIN/stop\", payload: \"\" });\n        \n        lastSentLights = [0, 0, 0, 0, 0];\n        flow.set('isAnimPlaying', false);\n    }\n\n    flow.set('lastSolved', isSolved);\n    flow.set('lastSentLights', lastSentLights);\n}\n\n// 2. Normal item placement logic\nif (!isSolved) {\n    for (let i = 0; i < 5; i++) {\n        if (statusArray[i] !== lastSentLights[i]) {\n            if (statusArray[i] === 1) msgsToSend.push({ topic: \"/cue/CANDLE/start\", payload: \"\" });\n            msgsToSend.push({ topic: \"/ritual/light/\" + (i+1), payload: statusArray[i] });\n            lastSentLights[i] = statusArray[i];\n        }\n    }\n    flow.set('lastSentLights', lastSentLights);\n}\n\n// Unified output: send all accumulated commands in a single packet\nif (msgsToSend.length > 0) {\n    return [msgsToSend]; \n}\nreturn null;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1020,
-        "y": 680,
+        "x": 1670,
+        "y": 400,
         "wires": [
             [
-                "211d72aca4ea5575"
-            ]
-        ]
-    },
-    {
-        "id": "99e2cec751979fbc",
-        "type": "delay",
-        "z": "33698b568f6037bd",
-        "name": "",
-        "pauseType": "delay",
-        "timeout": "2000",
-        "timeoutUnits": "milliseconds",
-        "rate": "1",
-        "nbRateUnits": "1",
-        "rateUnits": "second",
-        "randomFirst": "1",
-        "randomLast": "5",
-        "randomUnits": "seconds",
-        "drop": false,
-        "allowrate": false,
-        "outputs": 1,
-        "x": 700,
-        "y": 640,
-        "wires": [
-            [
-                "211d72aca4ea5575",
-                "b3271530dc305f37"
+                "6480e7d9f8ebe028"
             ]
         ]
     },
@@ -811,8 +388,8 @@
         "checkall": "true",
         "repair": false,
         "outputs": 2,
-        "x": 1350,
-        "y": 500,
+        "x": 2530,
+        "y": 1240,
         "wires": [
             [
                 "0cf8a841954a3acf"
@@ -828,12 +405,12 @@
         "z": "33698b568f6037bd",
         "name": "",
         "serial": "fdb0e4bbaa203aa0",
-        "x": 110,
+        "x": 590,
         "y": 160,
         "wires": [
             [
-                "c1291bb550f9bce7",
-                "048130df8fbd4a77"
+                "048130df8fbd4a77",
+                "c1291bb550f9bce7"
             ]
         ]
     },
@@ -843,15 +420,14 @@
         "z": "33698b568f6037bd",
         "name": "",
         "serial": "fdb0e4bbaa203aa0",
-        "x": 690,
-        "y": 920,
+        "x": 1955.0000305175781,
+        "y": 697.5000095367432,
         "wires": []
     },
     {
         "id": "7c9bd924554d01b3",
         "type": "aedes broker",
         "z": "33698b568f6037bd",
-        "d": true,
         "name": "Local MQTT Server",
         "mqtt_port": "1883",
         "mqtt_ws_bind": "port",
@@ -867,43 +443,491 @@
         "dburl": "",
         "persist_to_file": false,
         "usetls": false,
-        "x": 110,
-        "y": 20,
+        "x": 590,
+        "y": 60,
         "wires": [
             [],
             []
         ]
     },
     {
-        "id": "e3685db063ce93e9",
-        "type": "mqtt-broker",
-        "name": "WokwiTest",
-        "broker": "broker.hivemq.com",
-        "port": 1883,
-        "clientid": "",
-        "autoConnect": true,
-        "usetls": false,
-        "protocolVersion": 4,
-        "keepalive": 60,
-        "cleansession": true,
-        "autoUnsubscribe": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthRetain": "false",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closeRetain": "false",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willRetain": "false",
-        "willPayload": "",
-        "willMsg": {},
+        "id": "6480e7d9f8ebe028",
+        "type": "mqtt out",
+        "z": "33698b568f6037bd",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
         "userProps": "",
-        "sessionExpiry": ""
+        "correl": "",
+        "expiry": "",
+        "broker": "b37c768b1e8108f0",
+        "x": 1970,
+        "y": 400,
+        "wires": []
+    },
+    {
+        "id": "223a8b466160b2ca",
+        "type": "mqtt in",
+        "z": "33698b568f6037bd",
+        "name": "QLab",
+        "topic": "/cue/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "b37c768b1e8108f0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 2190,
+        "y": 1200,
+        "wires": [
+            [
+                "211d72aca4ea5575"
+            ]
+        ]
+    },
+    {
+        "id": "71d716f3e7dce21a",
+        "type": "mqtt in",
+        "z": "33698b568f6037bd",
+        "name": "QLC+",
+        "topic": "/ritual/#",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "b37c768b1e8108f0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 2190,
+        "y": 1280,
+        "wires": [
+            [
+                "211d72aca4ea5575"
+            ]
+        ]
+    },
+    {
+        "id": "cb38865c65a6f5a5",
+        "type": "mqtt in",
+        "z": "33698b568f6037bd",
+        "name": "LightAnimation",
+        "topic": "/ritual/timeline/start",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "b37c768b1e8108f0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 1300,
+        "y": 1200,
+        "wires": [
+            [
+                "96e7b50ddae0f74e"
+            ]
+        ]
+    },
+    {
+        "id": "51034fe753496c5d",
+        "type": "inject",
+        "z": "33698b568f6037bd",
+        "name": "Success",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"data\":[1,1,1,1,1],\"solved\":true,\"wrong\":false}",
+        "payloadType": "json",
+        "x": 120,
+        "y": 600,
+        "wires": [
+            [
+                "a8559ddac23830cc"
+            ]
+        ]
+    },
+    {
+        "id": "8e9873cc9822800d",
+        "type": "inject",
+        "z": "33698b568f6037bd",
+        "name": "FirstOne",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"data\":[1,0,0,0,0],\"solved\":false,\"wrong\":false}",
+        "payloadType": "json",
+        "x": 120,
+        "y": 360,
+        "wires": [
+            [
+                "a8559ddac23830cc"
+            ]
+        ]
+    },
+    {
+        "id": "0936bf5b4ebe2e09",
+        "type": "inject",
+        "z": "33698b568f6037bd",
+        "name": "Three",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "/ritual/light/3",
+        "payload": "{\"data\":[1,1,1,0,0],\"solved\":false,\"wrong\":false}",
+        "payloadType": "json",
+        "x": 110,
+        "y": 440,
+        "wires": [
+            [
+                "a8559ddac23830cc"
+            ]
+        ]
+    },
+    {
+        "id": "b2d72227d70ec6bb",
+        "type": "inject",
+        "z": "33698b568f6037bd",
+        "name": "Wrong",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"data\":[1,1,1,0,0],\"solved\":false,\"wrong\":true}",
+        "payloadType": "json",
+        "x": 110,
+        "y": 520,
+        "wires": [
+            [
+                "a8559ddac23830cc"
+            ]
+        ]
+    },
+    {
+        "id": "5fd56c846292b4c3",
+        "type": "inject",
+        "z": "33698b568f6037bd",
+        "name": "Initial",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "{\"data\":[0,0,0,0,0],\"solved\":false,\"wrong\":false}",
+        "payloadType": "json",
+        "x": 110,
+        "y": 300,
+        "wires": [
+            [
+                "a8559ddac23830cc"
+            ]
+        ]
+    },
+    {
+        "id": "a8559ddac23830cc",
+        "type": "change",
+        "z": "33698b568f6037bd",
+        "name": "Mock Data Hub",
+        "rules": [],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 340,
+        "y": 420,
+        "wires": [
+            [
+                "048130df8fbd4a77",
+                "9c6a3aa4a1a167e8",
+                "4703b560fa594d0d"
+            ]
+        ]
+    },
+    {
+        "id": "02a76c79556a2470",
+        "type": "change",
+        "z": "33698b568f6037bd",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"data\":[1,1,1,1,1],\"solved\":true,\"wrong\":false}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 980,
+        "y": 940,
+        "wires": [
+            [
+                "de8821ff8ee9cc48"
+            ]
+        ]
+    },
+    {
+        "id": "6b0c3c2a64bc04b0",
+        "type": "change",
+        "z": "33698b568f6037bd",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "payload",
+                "pt": "msg",
+                "to": "{\"data\":[0,0,0,0,0],\"solved\":false,\"wrong\":false}",
+                "tot": "json"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 980,
+        "y": 620,
+        "wires": [
+            [
+                "de8821ff8ee9cc48"
+            ]
+        ]
+    },
+    {
+        "id": "de8821ff8ee9cc48",
+        "type": "change",
+        "z": "33698b568f6037bd",
+        "name": "Hub",
+        "rules": [],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1190,
+        "y": 620,
+        "wires": [
+            [
+                "9c6a3aa4a1a167e8",
+                "4703b560fa594d0d"
+            ]
+        ]
+    },
+    {
+        "id": "96e7b50ddae0f74e",
+        "type": "delay",
+        "z": "33698b568f6037bd",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "2",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1520,
+        "y": 1200,
+        "wires": [
+            [
+                "730de362cbf7a906",
+                "be4a51c1bd56e0ec"
+            ]
+        ]
+    },
+    {
+        "id": "730de362cbf7a906",
+        "type": "function",
+        "z": "33698b568f6037bd",
+        "name": "ON",
+        "func": "var msgs = [];\n\n// 1. Trigger the main visual burst\nmsgs.push({ topic: \"/ritual/win_anim\", payload: 1 }); \n\n// 2. Trigger the main audio burst\nmsgs.push({ topic: \"/cue/WIN/start\", payload: \"\" });\n\n// Package both actions and send them together\nreturn [msgs];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1710,
+        "y": 1200,
+        "wires": [
+            [
+                "18ce19e3f035c314"
+            ]
+        ]
+    },
+    {
+        "id": "18ce19e3f035c314",
+        "type": "mqtt out",
+        "z": "33698b568f6037bd",
+        "name": "",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "b37c768b1e8108f0",
+        "x": 2050,
+        "y": 1200,
+        "wires": []
+    },
+    {
+        "id": "be4a51c1bd56e0ec",
+        "type": "delay",
+        "z": "33698b568f6037bd",
+        "name": "",
+        "pauseType": "delay",
+        "timeout": "5",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 1700,
+        "y": 1360,
+        "wires": [
+            [
+                "0c28680a04de4229"
+            ]
+        ]
+    },
+    {
+        "id": "0c28680a04de4229",
+        "type": "function",
+        "z": "33698b568f6037bd",
+        "name": "OFF",
+        "func": "\nvar msgs = [];\nmsgs.push({ topic: \"/ritual/win_anim\", payload: 0 }); // Send 0 again to stop the toggle animation\n\n// Turn all 5 lights back on\nfor (var i = 1; i <= 5; i++) {\n    msgs.push({ topic: \"/ritual/light/\" + i, payload: 1 });\n}\nreturn [msgs];",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1890,
+        "y": 1360,
+        "wires": [
+            [
+                "18ce19e3f035c314"
+            ]
+        ]
+    },
+    {
+        "id": "cdcf6a3d309b0dd4",
+        "type": "mqtt in",
+        "z": "33698b568f6037bd",
+        "name": "",
+        "topic": "/cue/WIN/cancel",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "b37c768b1e8108f0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 1040,
+        "y": 1480,
+        "wires": [
+            [
+                "d87193a117924c29"
+            ]
+        ]
+    },
+    {
+        "id": "d87193a117924c29",
+        "type": "change",
+        "z": "33698b568f6037bd",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "reset",
+                "pt": "msg",
+                "to": "true",
+                "tot": "bool"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 1280,
+        "y": 1480,
+        "wires": [
+            [
+                "96e7b50ddae0f74e",
+                "be4a51c1bd56e0ec"
+            ]
+        ]
     },
     {
         "id": "grp_monitoring",
@@ -948,6 +972,37 @@
         "responsetimeout": 10000
     },
     {
+        "id": "b37c768b1e8108f0",
+        "type": "mqtt-broker",
+        "name": "Local",
+        "broker": "127.0.0.1",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
         "id": "tab_dashboard",
         "type": "ui_tab",
         "name": "Ritual Table",
@@ -956,7 +1011,7 @@
         "hidden": false
     },
     {
-        "id": "c2f05b06c1c689d6",
+        "id": "91f0079704471b3b",
         "type": "global-config",
         "env": [],
         "modules": {

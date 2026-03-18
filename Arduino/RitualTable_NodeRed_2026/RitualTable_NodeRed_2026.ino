@@ -1,35 +1,36 @@
 /*
  * =======================================================================================
- * Project:    Ritual Table v3 - USB Serial Master-Slave Controller
+ * Project:    Ritual Table v4 - Interactive RFID Controller (Pure USB Serial + Raspberry Pi 5)
  * Author:     Yinglian Liu
  * Date:       March 2026
  * =======================================================================================
  * Description:
- * This version replaces Wi-Fi / MQTT communication with direct USB serial communication.
- * The Arduino acts as a lower-level hardware controller:
- * - Reads 5 RFID readers
- * - Controls LEDs and relays for physical feedback
- * - Reports puzzle state to Node-RED via JSON over Serial
- * - Receives admin commands from Node-RED via Serial
+ * This version uses pure USB serial communication between the Arduino and Raspberry Pi 5.
+ * The Arduino acts as the real-time hardware controller:
+ * - Scans 5 RFID readers
+ * - Drives local LEDs and relays for physical feedback
+ * - Sends puzzle state updates to Node-RED as JSON over Serial
+ * - Receives admin commands from Node-RED over Serial
  *
  * System Architecture:
- * - Arduino: Sensor and actuator controller
- * - Node-RED: Central logic, admin control, and audio / lighting routing
+ * - Arduino: Real-time hardware layer for sensing and physical output
+ * - Raspberry Pi 5 / Node-RED: Central orchestration, dashboard, timing logic,
+ *   and media / lighting control
  *
  * Key Features:
  * 1. Sequentially scans 5 MFRC522 RFID readers.
- * 2. Sends JSON state updates over Serial only when state changes occur.
- * 3. Supports startup state synchronization using an "isSync" flag.
- * 4. Accepts admin commands from Node-RED:
+ * 2. Uses state-change detection to avoid unnecessary serial traffic.
+ * 3. Sends a dedicated "wrong" flag immediately when an incorrect item is detected.
+ * 4. Supports admin commands over Serial:
  *    - R = Reset puzzle
  *    - F = Force solved state
- * 5. Keeps all game logic centralized in Node-RED while Arduino handles hardware.
+ * 5. Maintains local fallback behavior for physical feedback and win animation.
  *
  * Serial Message Format:
  * {
- *   "data":[false,false,true,false,false],
+ *   "data":[1,0,1,0,0],
  *   "solved":false,
- *   "isSync":true
+ *   "wrong":false
  * }
  * =======================================================================================
  */
@@ -42,8 +43,8 @@ const uint8_t ssPins[Num_Readers] = {9, 8, 7, 6, 5};
 const uint8_t rstPin = 10;
 MFRC522 rfid[Num_Readers];
 
-// Target card UIDs
-// Temporary test UIDs; replace these with the actual ritual item tags
+// Test UIDs used during Node-RED integration
+// Replace these with the actual ritual item tags for the final installation
 byte targetUIDs[Num_Readers][7] = {
   {0x04, 0xA5, 0xAA, 0xC5, 0x79, 0x00, 0x00},  // Trophy
   {0x04, 0xA7, 0xAA, 0xC5, 0x79, 0x00, 0x00},  // Sheet Music
@@ -51,15 +52,12 @@ byte targetUIDs[Num_Readers][7] = {
   {0x04, 0xBE, 0xAA, 0xC5, 0x79, 0x00, 0x00},  // Journal
   {0x04, 0xA3, 0xAA, 0xC5, 0x79, 0x00, 0x00},  // Ring Box
 };
-
 byte targetUIDLengths[Num_Readers] = {7, 7, 7, 7, 7};
 
 // GM / admin reset card UID
 byte resetUID[7] = {0xF3, 0x9A, 0x2B, 0xAB, 0x00, 0x00, 0x00};
 const byte resetUIDLength = 4;
 
-// Physical output pins
-// A5 usually maps to 19, and A6 usually maps to 20
 const uint8_t ledPins[] = {4, 3, 2, 19, 20};
 const uint8_t relayPins[Num_Readers] = {A0, A1, A2, A3, A4};
 
@@ -67,8 +65,8 @@ bool cardDetected[] = {false, false, false, false, false};
 bool puzzleSolved = false;
 
 void setup() {
-  // 1. Initialize Serial at 115200 baud
-  //    This ensures JSON messages are transmitted quickly with minimal delay
+  // Run Serial at 115200 baud to ensure fast and stable communication
+  // with the Raspberry Pi 5
   Serial.begin(115200);
 
   for (uint8_t i = 0; i < Num_Readers; i++) {
@@ -80,67 +78,69 @@ void setup() {
   SPI.begin();
   for (uint8_t reader = 0; reader < Num_Readers; reader++) {
     rfid[reader].PCD_Init(ssPins[reader], rstPin);
-    delay(4); // Give each reader a short startup delay
+    delay(4);
   }
 
-  // 2. Startup ：
-  //    after boot or power recovery, send one full state update with isSync = true
-  delay(1000); 
-  sendSerialState(true);
+  // Force-send the initial state to Node-RED on startup
+  sendSerialState();
 }
 
 void loop() {
-  // ==========================================
-  // 3. Listen for admin commands from Node-RED
-  // ==========================================
-  if (Serial.available() > 0) {
-    char incomingByte = Serial.read();
-    if (incomingByte == 'R' || incomingByte == 'r') resetToInitialState();
-    else if (incomingByte == 'F' || incomingByte == 'f') forceSolve();
-  }
+  // 1. Always listen for commands coming from Node-RED
+  //    This replaces the old MQTT subscription model
+  checkSerialCommands();
 
-  // ==========================================
-  // 4. Core RFID scanning logic
-  // ==========================================
   bool allCorrectCardsDetected = true;
+  bool stateChanged = false; // Tracks whether any state changed during this loop cycle
 
+  // 2. Poll the RFID readers one by one
   for (uint8_t reader = 0; reader < Num_Readers; reader++) {
+    // Activate the current reader only
     for (uint8_t i = 0; i < Num_Readers; i++) digitalWrite(ssPins[i], HIGH);
     digitalWrite(ssPins[reader], LOW);
-    delay(5); // With networking removed, this can be reduced to 5 ms for faster scanning
+    delay(10);
 
     if (rfid[reader].PICC_IsNewCardPresent() && rfid[reader].PICC_ReadCardSerial()) {
       byte* uid = rfid[reader].uid.uidByte;
       byte uidSize = rfid[reader].uid.size;
 
       if (compareUID(uid, uidSize, targetUIDs[reader], targetUIDLengths[reader])) {
-        bool wasFalse = !cardDetected[reader];
-        cardDetected[reader] = true;
+        // Correct card
+        if (!cardDetected[reader]) {
+          cardDetected[reader] = true;
+          stateChanged = true;
+        }
         digitalWrite(ledPins[reader], HIGH);
         digitalWrite(relayPins[reader], HIGH);
-
-        // Send JSON only when the state changes from "not detected" to "detected"
-        if (wasFalse) sendSerialState(false);
       }
       else if (compareUID(uid, uidSize, resetUID, resetUIDLength)) {
+        // Reset card
         resetToInitialState();
-        return;
+        return; // Exit the current loop cycle immediately and restart cleanly
       }
       else {
-        flashAllCandles(3, 100);
-        bool wasTrue = cardDetected[reader];
-        cardDetected[reader] = false;
+        // Wrong card -> trigger the error flash animation
 
-        // Send JSON only when the state changes from "detected" to "not detected"
-        if (wasTrue) sendSerialState(false);
+        // Important fix:
+        // report the wrong placement to Node-RED immediately before flashing
+        sendSerialState(true);
+
+        flashAllCandles(3, 100);
+
+        if (cardDetected[reader]) {
+          cardDetected[reader] = false;
+          stateChanged = true;
+        }
       }
 
       rfid[reader].PICC_HaltA();
       rfid[reader].PCD_StopCrypto1();
     }
 
+    // Deactivate the current reader
     digitalWrite(ssPins[reader], HIGH);
 
+    // State resolution for this reader
     if (cardDetected[reader]) {
       digitalWrite(ledPins[reader], HIGH);
       digitalWrite(relayPins[reader], HIGH);
@@ -151,36 +151,62 @@ void loop() {
     }
   }
 
+  // ================= Centralized resolution stage =================
+
   if (!allCorrectCardsDetected && puzzleSolved) {
     puzzleSolved = false;
-    sendSerialState(false);
+    stateChanged = true;
   }
 
   if (allCorrectCardsDetected && !puzzleSolved) {
     puzzleSolved = true;
-    sendSerialState(false);
+    stateChanged = true;
+  }
+
+  // Most important step:
+  // only send a clean JSON update over USB Serial if the state actually changed
+  if (stateChanged) {
+    sendSerialState();
+  }
+
+  // After sending data, run the blocking physical win animation if needed
+  if (allCorrectCardsDetected && stateChanged) {
     playWinAnimation();
   }
 }
 
-// ==========================================
-// 5. Core state transmission function:
-//    package the current puzzle state as a JSON message
-// ==========================================
-void sendSerialState(bool isSync) {
+// ================== Core functions ==================
+
+// Replaces the old MQTT publish behavior
+// Build the state packet as JSON and print it to Serial
+// The parameter defaults to false, meaning "no wrong placement"
+void sendSerialState(bool isWrong = false) {
   Serial.print("{\"data\":[");
   for (uint8_t i = 0; i < Num_Readers; i++) {
-    Serial.print(cardDetected[i]);
+    Serial.print(cardDetected[i] ? 1 : 0);
     if (i < Num_Readers - 1) Serial.print(",");
   }
   Serial.print("],\"solved\":");
   Serial.print(puzzleSolved ? "true" : "false");
-  Serial.print(",\"isSync\":");
-  Serial.print(isSync ? "true" : "false");
 
-  // Critical:
-  // use println() so Node-RED can split packets by the trailing newline
+  // Include the dedicated wrong-placement flag
+  Serial.print(",\"wrong\":");
+  Serial.print(isWrong ? "true" : "false");
+
   Serial.println("}");
+}
+
+// Replaces the old MQTT message handler
+// Listen for single-character commands over USB Serial
+void checkSerialCommands() {
+  if (Serial.available() > 0) {
+    char incomingChar = Serial.read();
+    if (incomingChar == 'R' || incomingChar == 'r') {
+      resetToInitialState();
+    } else if (incomingChar == 'F' || incomingChar == 'f') {
+      forceSolve();
+    }
+  }
 }
 
 void forceSolve() {
@@ -190,7 +216,7 @@ void forceSolve() {
     digitalWrite(relayPins[i], HIGH);
   }
   puzzleSolved = true;
-  sendSerialState(false);
+  sendSerialState();
   playWinAnimation();
 }
 
@@ -201,42 +227,31 @@ void resetToInitialState() {
     digitalWrite(relayPins[i], LOW);
   }
   puzzleSolved = false;
-  sendSerialState(false);
+  sendSerialState();
   delay(1000);
 }
 
 void playWinAnimation() {
   delay(2000);
   for (uint8_t repeat = 0; repeat < 3; repeat++) {
+    // Network keepalive logic was removed here because USB serial does not drop like Wi-Fi / MQTT
     for (uint8_t i = 0; i < Num_Readers; i++) {
-      digitalWrite(relayPins[i], HIGH);
-      digitalWrite(ledPins[i], HIGH);
+      digitalWrite(relayPins[i], HIGH); digitalWrite(ledPins[i], HIGH);
       delay(50);
-      digitalWrite(relayPins[i], LOW);
-      digitalWrite(ledPins[i], LOW);
+      digitalWrite(relayPins[i], LOW); digitalWrite(ledPins[i], LOW);
       delay(50);
     }
     for (int i = Num_Readers - 1; i >= 0; i--) {
-      digitalWrite(relayPins[i], HIGH);
-      digitalWrite(ledPins[i], HIGH);
+      digitalWrite(relayPins[i], HIGH); digitalWrite(ledPins[i], HIGH);
       delay(50);
-      digitalWrite(relayPins[i], LOW);
-      digitalWrite(ledPins[i], LOW);
+      digitalWrite(relayPins[i], LOW); digitalWrite(ledPins[i], LOW);
       delay(50);
     }
   }
-  for (uint8_t i = 0; i < Num_Readers; i++) {
-    digitalWrite(relayPins[i], HIGH);
-    digitalWrite(ledPins[i], HIGH);
-  }
-}
 
-bool compareUID(byte* uid1, byte uid1Size, byte* uid2, byte uid2Size) {
-  if (uid1Size != uid2Size) return false;
-  for (byte i = 0; i < uid1Size; i++) {
-    if (uid1[i] != uid2[i]) return false;
+  for (uint8_t i = 0; i < Num_Readers; i++) {
+    digitalWrite(relayPins[i], HIGH); digitalWrite(ledPins[i], HIGH);
   }
-  return true;
 }
 
 void flashAllCandles(uint8_t times, unsigned long duration) {
@@ -250,4 +265,12 @@ void flashAllCandles(uint8_t times, unsigned long duration) {
     }
     delay(duration);
   }
+}
+
+bool compareUID(byte* uid1, byte uid1Size, byte* uid2, byte uid2Size) {
+  if (uid1Size != uid2Size) return false;
+  for (byte i = 0; i < uid1Size; i++) {
+    if (uid1[i] != uid2[i]) return false;
+  }
+  return true;
 }
