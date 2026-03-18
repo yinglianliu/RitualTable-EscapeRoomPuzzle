@@ -11,7 +11,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 .sim{max-width:680px;margin:0 auto}
 .topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1.5rem}
 .topbar h2{font-size:18px;font-weight:500;color:#2c2c2a}
-.mode-toggle{display:flex;gap:0;border:0.5px solid #d3d1c7;border-radius:8px;overflow:hidden;background:#fff}
+.mode-toggle{display:flex;border:0.5px solid #d3d1c7;border-radius:8px;overflow:hidden;background:#fff}
 .mode-btn{font-size:12px;padding:6px 16px;border:none;background:transparent;color:#888780;cursor:pointer;font-family:inherit;transition:background 0.15s,color 0.15s}
 .mode-btn.active{background:#534AB7;color:#fff}
 .hint-row{font-size:11px;color:#888780;margin-bottom:1.5rem;padding:8px 12px;background:#fff;border-radius:8px;border:0.5px solid #d3d1c7}
@@ -67,7 +67,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 .btn:active{transform:scale(0.98)}
 .btn.danger{border-color:#A32D2D;color:#791f1f}
 .btn.danger:hover{background:#fcebeb}
-.simple-feed{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:14px;margin-bottom:1.5rem;min-height:120px}
+.simple-feed{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:14px;margin-bottom:1rem;min-height:100px}
 .feed-list{display:flex;flex-direction:column;gap:6px}
 .feed-item{font-size:13px;padding:8px 12px;border-radius:8px;display:flex;align-items:center;gap:8px;line-height:1.4}
 .feed-item.info{background:#eeedfe;color:#3c3489}
@@ -81,6 +81,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
 .feed-icon.error{background:#f7c1c1;color:#791f1f}
 .feed-icon.warn{background:#fac775;color:#633806}
 .feed-icon.muted{background:#d3d1c7;color:#5f5e5a}
+.dashboard-panel{background:#fff;border:0.5px solid #d3d1c7;border-radius:12px;padding:12px 14px;margin-bottom:1.5rem}
+.dashboard-panel .panel-title{font-size:11px;font-weight:500;color:#888780;letter-spacing:0.05em;text-transform:uppercase;margin-bottom:10px}
+.dash-leds{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:10px}
+.dash-led-wrap{display:flex;flex-direction:column;align-items:center;gap:4px}
+.dash-led{width:14px;height:14px;border-radius:50%;border:0.5px solid #d3d1c7;background:#f1efe8;margin:0 auto;transition:background 0.2s,border-color 0.2s}
+.dash-led.on{background:#00cc44;border-color:#009933}
+.dash-led.off{background:#E24B4A;border-color:#A32D2D}
+.dash-led-label{font-size:9px;color:#888780;text-align:center;line-height:1.2}
+.dash-status{font-size:12px;padding:6px 10px;border-radius:8px;background:#f1efe8;color:#888780}
+.dash-status.solved{background:#eaf3de;color:#27500a}
+.dash-status.waiting{background:#f1efe8;color:#888780}
 .status-summary{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:1.5rem}
 .stat{background:#fff;border:0.5px solid #d3d1c7;border-radius:8px;padding:10px 12px}
 .stat-label{font-size:11px;color:#888780;margin-bottom:2px}
@@ -108,10 +119,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
     Left click empty = correct item &nbsp;·&nbsp; Left click occupied = wrong replacement &nbsp;·&nbsp; Right click empty = wrong item
   </div>
 
-  <div class="section-label">Ritual item slots</div>
+  <div class="section-label">RFID slots</div>
   <div class="slots-row" id="slots"></div>
 
-  <div class="section-label">Candle lights (relay feedback)</div>
+  <div class="section-label">Relay-controlled bulbs (physical feedback)</div>
   <div class="bulbs-row" id="bulbs"></div>
 
   <div class="progress-row">
@@ -132,6 +143,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
         <div class="feed-item muted"><div class="feed-icon muted">—</div>Waiting for items to be placed...</div>
       </div>
     </div>
+
+    <div class="dashboard-panel">
+      <div class="panel-title">Node-RED dashboard — monitoring panel</div>
+      <div class="dash-leds" id="dash-leds"></div>
+      <div class="dash-status" id="dash-status">Status: Waiting...</div>
+    </div>
+
     <div class="status-summary">
       <div class="stat">
         <div class="stat-label">Audio (QLab)</div>
@@ -218,6 +236,31 @@ function renderBulbs(){
   });
 }
 
+function renderDashLeds(){
+  const c=document.getElementById('dash-leds');
+  c.innerHTML='';
+  ITEMS.forEach((name,i)=>{
+    const wrap=document.createElement('div');
+    wrap.className='dash-led-wrap';
+    const led=document.createElement('div');
+    led.className='dash-led'+(state[i]?' on':' off');
+    const lbl=document.createElement('div');
+    lbl.className='dash-led-label';
+    lbl.textContent=name;
+    wrap.appendChild(led);
+    wrap.appendChild(lbl);
+    c.appendChild(wrap);
+  });
+  const statusEl=document.getElementById('dash-status');
+  if(solved){
+    statusEl.textContent='Status: PUZZLE SOLVED!';
+    statusEl.className='dash-status solved';
+  } else {
+    statusEl.textContent='Status: Waiting...';
+    statusEl.className='dash-status waiting';
+  }
+}
+
 function handleLeftClick(i){
   if(solved||lockInput) return;
   if(!state[i]) placeCorrect(i);
@@ -240,6 +283,7 @@ function placeCorrect(i){
   updateSerial(false);
   renderSlots();
   renderBulbs();
+  renderDashLeds();
   checkSolved();
 }
 
@@ -271,6 +315,7 @@ function triggerWrong(i,wasOccupied){
       state[i]=false;
       renderSlots();
       renderBulbs();
+      renderDashLeds();
       document.getElementById('serial-card').className='serial-card';
       updateSerial(false);
       updateSimpleStatus();
@@ -287,6 +332,7 @@ function checkSolved(){
       document.getElementById('win-banner').classList.add('show');
       addFeed('success','★','All 5 items placed — ritual complete! Win lighting and audio sequence now playing.');
       updateSimpleStatus('win');
+      renderDashLeds();
       addLog('qlab','success','/cue/WIN/start');
       addLog('qlc','success','/ritual/timeline/start');
       setTimeout(()=>addLog('qlc','success','/ritual/win_anim  →  1'),400);
@@ -366,6 +412,7 @@ function resetAll(){
   updateSimpleStatus();
   renderSlots();
   renderBulbs();
+  renderDashLeds();
 }
 
 function forceWin(){
@@ -378,11 +425,13 @@ function forceWin(){
   updateSerial(false);
   renderSlots();
   renderBulbs();
+  renderDashLeds();
   checkSolved();
 }
 
 renderSlots();
 renderBulbs();
+renderDashLeds();
 updateSerial();
 </script>
 </body>
