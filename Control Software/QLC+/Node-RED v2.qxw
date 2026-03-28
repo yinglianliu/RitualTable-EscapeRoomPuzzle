@@ -4,13 +4,13 @@
  <Creator>
   <Name>Q Light Controller Plus</Name>
   <Version>5.1.0</Version>
-  <Author>Yinglian Liu</Author>
+  <Author>yinglian</Author>
  </Creator>
  <Engine>
   <InputOutputMap>
    <BeatGenerator BeatType="Disabled" BPM="120"/>
    <Universe Name="Universe 1" ID="0">
-    <Input Plugin="OSC" UID="192.168.137.148" Line="1"/>
+    <Input Plugin="OSC" UID="169.254.142.102" Line="1"/>
     <Output Plugin="DMX USB" UID="None" Line="0"/>
    </Universe>
    <Universe Name="Universe 2" ID="1"/>
@@ -82,7 +82,6 @@
   <Function ID="2" Type="Scene" Name="Fixture 2 ON">
    <Speed FadeIn="0" FadeOut="0" Duration="0"/>
    <FixtureVal ID="1">0,0,1,255,2,0,3,0</FixtureVal>
-   <FixtureVal ID="0">0,0,1,0,2,0,3,0</FixtureVal>
   </Function>
   <Function ID="3" Type="Scene" Name="Fixture 3 ON">
    <Speed FadeIn="0" FadeOut="0" Duration="0"/>
@@ -131,42 +130,6 @@
    <ShowEnableButton>True</ShowEnableButton>
    <Collapsed>False</Collapsed>
    <Disabled>False</Disabled>
-   <Button Caption="Light OFF" ID="0">
-    <WindowState Visible="True" X="300" Y="300" Width="71" Height="71"/>
-    <Appearance>
-     <BackgroundColor>4282664004</BackgroundColor>
-    </Appearance>
-    <Function ID="4294967295"/>
-    <Action FadeOut="60">StopAll</Action>
-    <Input ID="0" Universe="0" Channel="29037"/>
-   </Button>
-   <Button Caption="Amulet" ID="3">
-    <WindowState Visible="True" X="300" Y="715" Width="71" Height="71"/>
-    <Appearance>
-     <BackgroundColor>4282664004</BackgroundColor>
-    </Appearance>
-    <Function ID="3"/>
-    <Action Override="0" ForceLTP="0">Flash</Action>
-    <Input ID="0" Universe="0" Channel="18300"/>
-   </Button>
-   <Button Caption="RingBox" ID="6">
-    <WindowState Visible="True" X="300" Y="902" Width="71" Height="71"/>
-    <Appearance>
-     <BackgroundColor>4282664004</BackgroundColor>
-    </Appearance>
-    <Function ID="5"/>
-    <Action Override="0" ForceLTP="0">Flash</Action>
-    <Input ID="0" Universe="0" Channel="8778"/>
-   </Button>
-   <Button Caption="SheetMusic" ID="2">
-    <WindowState Visible="True" X="300" Y="615" Width="76" Height="76"/>
-    <Appearance>
-     <BackgroundColor>4282664004</BackgroundColor>
-    </Appearance>
-    <Function ID="2"/>
-    <Action Override="0" ForceLTP="0">Flash</Action>
-    <Input ID="0" Universe="0" Channel="22261"/>
-   </Button>
    <Button Caption="Trophy" ID="1">
     <WindowState Visible="True" X="300" Y="529" Width="71" Height="71"/>
     <Appearance>
@@ -191,8 +154,44 @@
      <BackgroundColor>4282664004</BackgroundColor>
     </Appearance>
     <Function ID="6"/>
-    <Action Override="0" ForceLTP="0">Flash</Action>
+    <Action>Toggle</Action>
     <Input ID="0" Universe="0" Channel="4998"/>
+   </Button>
+   <Button Caption="SheetMusic" ID="2">
+    <WindowState Visible="True" X="300" Y="615" Width="76" Height="76"/>
+    <Appearance>
+     <BackgroundColor>4282664004</BackgroundColor>
+    </Appearance>
+    <Function ID="2"/>
+    <Action Override="0" ForceLTP="0">Flash</Action>
+    <Input ID="0" Universe="0" Channel="22261"/>
+   </Button>
+   <Button Caption="Amulet" ID="3">
+    <WindowState Visible="True" X="300" Y="715" Width="71" Height="71"/>
+    <Appearance>
+     <BackgroundColor>4282664004</BackgroundColor>
+    </Appearance>
+    <Function ID="3"/>
+    <Action Override="0" ForceLTP="0">Flash</Action>
+    <Input ID="0" Universe="0" Channel="18300"/>
+   </Button>
+   <Button Caption="RingBox" ID="6">
+    <WindowState Visible="True" X="300" Y="902" Width="71" Height="71"/>
+    <Appearance>
+     <BackgroundColor>4282664004</BackgroundColor>
+    </Appearance>
+    <Function ID="5"/>
+    <Action Override="0" ForceLTP="0">Flash</Action>
+    <Input ID="0" Universe="0" Channel="8778"/>
+   </Button>
+   <Button Caption="Light OFF" ID="0">
+    <WindowState Visible="True" X="300" Y="300" Width="71" Height="71"/>
+    <Appearance>
+     <BackgroundColor>4282664004</BackgroundColor>
+    </Appearance>
+    <Function ID="4294967295"/>
+    <Action FadeOut="60">StopAll</Action>
+    <Input ID="0" Universe="0" Channel="29037"/>
    </Button>
   </Frame>
   <Frame Caption="Page 2" ID="1">

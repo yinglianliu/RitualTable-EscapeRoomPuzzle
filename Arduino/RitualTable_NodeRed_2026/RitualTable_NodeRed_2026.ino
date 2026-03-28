@@ -64,6 +64,8 @@ const uint8_t relayPins[Num_Readers] = {A0, A1, A2, A3, A4};
 bool cardDetected[] = {false, false, false, false, false};
 bool puzzleSolved = false;
 
+void sendSerialState(bool isWrong = false);
+
 void setup() {
   // Run Serial at 115200 baud to ensure fast and stable communication
   // with the Raspberry Pi 5
@@ -180,7 +182,9 @@ void loop() {
 // Replaces the old MQTT publish behavior
 // Build the state packet as JSON and print it to Serial
 // The parameter defaults to false, meaning "no wrong placement"
-void sendSerialState(bool isWrong = false) {
+void sendSerialState(bool isWrong) {
+  if(!Serial) return; //Prevents game cannot proceed due to serial port connection failure.
+
   Serial.print("{\"data\":[");
   for (uint8_t i = 0; i < Num_Readers; i++) {
     Serial.print(cardDetected[i] ? 1 : 0);
@@ -229,6 +233,12 @@ void resetToInitialState() {
   puzzleSolved = false;
   sendSerialState();
   delay(1000);
+
+  //clear the serial port buffer
+  while (Serial.available() > 0) {
+    Serial.read(); 
+  }
+
 }
 
 void playWinAnimation() {
@@ -246,6 +256,11 @@ void playWinAnimation() {
       delay(50);
       digitalWrite(relayPins[i], LOW); digitalWrite(ledPins[i], LOW);
       delay(50);
+    }
+
+    //clear the serial port buffer
+    while (Serial.available() > 0) {
+      Serial.read(); 
     }
   }
 
