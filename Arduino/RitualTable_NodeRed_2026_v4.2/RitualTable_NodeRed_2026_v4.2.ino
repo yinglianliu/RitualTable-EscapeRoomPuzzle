@@ -1,8 +1,8 @@
 /*
  * =======================================================================================
- * Project:    Ritual Table v4 - Interactive RFID Controller (Pure USB Serial + Raspberry Pi 5)
+ * Project:    Ritual Table v4.2 - Interactive RFID Controller (Pure USB Serial + Raspberry Pi 5)
  * Author:     Yinglian Liu
- * Date:       March 2026
+ * Date:       April 2026
  * =======================================================================================
  * Description:
  * This version uses pure USB serial communication between the Arduino and Raspberry Pi 5.
@@ -32,6 +32,7 @@
  *   "solved":false,
  *   "wrong":false
  * }
+ * 6. Add arduino Heartbeat to node-red, it can be monitoring by node-red dashboard
  * =======================================================================================
  */
 
@@ -65,6 +66,9 @@ bool cardDetected[] = {false, false, false, false, false};
 bool puzzleSolved = false;
 
 void sendSerialState(bool isWrong = false);
+
+unsigned long lastHeartbeatTime = 0;
+const unsigned long HEARTBEAT_INTERVAL = 2000;
 
 void setup() {
   // Run Serial at 115200 baud to ensure fast and stable communication
@@ -175,6 +179,12 @@ void loop() {
   if (allCorrectCardsDetected && stateChanged) {
     playWinAnimation();
   }
+
+  // ================= Heartbeat =================
+  if (millis() - lastHeartbeatTime >= HEARTBEAT_INTERVAL) {
+    sendSerialState(false); 
+    lastHeartbeatTime = millis();
+  }
 }
 
 // ================== Core functions ==================
@@ -224,6 +234,25 @@ void forceSolve() {
   playWinAnimation();
 }
 
+bool smartDelay(unsigned long ms) {
+  unsigned long start = millis();
+  while (millis() - start < ms) {
+    checkSerialCommands();
+
+    // Fix B: maintain heartbeat during blocking animations so Node-RED
+    // does not falsely report Arduino as Offline during playWinAnimation
+    if (millis() - lastHeartbeatTime >= HEARTBEAT_INTERVAL) {
+      sendSerialState(false);
+      lastHeartbeatTime = millis();
+    }
+
+    if (!puzzleSolved) {
+      return false;
+    }
+  }
+  return true;
+}
+
 void resetToInitialState() {
   for (uint8_t i = 0; i < Num_Readers; i++) {
     cardDetected[i] = false;
@@ -232,53 +261,60 @@ void resetToInitialState() {
   }
   puzzleSolved = false;
   sendSerialState();
-  delay(1000);
+  //delay(1000);
 
-  //clear the serial port buffer
-  while (Serial.available() > 0) {
-    Serial.read(); 
-  }
+  // //clear the serial port buffer
+  // while (Serial.available() > 0) {
+  //   Serial.read(); 
+  // }
 
 }
 
 void playWinAnimation() {
-  delay(2000);
-  for (uint8_t repeat = 0; repeat < 3; repeat++) {
+  //delay(2000);
+  if (!smartDelay(2000)) return;
+  for (uint8_t repeat = 0; repeat < 5; repeat++) {
     // Network keepalive logic was removed here because USB serial does not drop like Wi-Fi / MQTT
     for (uint8_t i = 0; i < Num_Readers; i++) {
       digitalWrite(relayPins[i], HIGH); digitalWrite(ledPins[i], HIGH);
-      delay(50);
+      if (!smartDelay(100)) return;
+      //delay(100);
       digitalWrite(relayPins[i], LOW); digitalWrite(ledPins[i], LOW);
-      delay(50);
+      if (!smartDelay(100)) return;
+      //delay(100);
     }
     for (int i = Num_Readers - 1; i >= 0; i--) {
       digitalWrite(relayPins[i], HIGH); digitalWrite(ledPins[i], HIGH);
-      delay(50);
+      if (!smartDelay(100)) return;
+     // delay(100);
       digitalWrite(relayPins[i], LOW); digitalWrite(ledPins[i], LOW);
-      delay(50);
-    }
-
-    //clear the serial port buffer
-    while (Serial.available() > 0) {
-      Serial.read(); 
+      if (!smartDelay(100)) return;
+      //delay(100);
     }
   }
 
   for (uint8_t i = 0; i < Num_Readers; i++) {
     digitalWrite(relayPins[i], HIGH); digitalWrite(ledPins[i], HIGH);
   }
+
+    //   //clear the serial port buffer
+    // while (Serial.available() > 0) {
+    //   Serial.read(); 
+    //}
 }
 
 void flashAllCandles(uint8_t times, unsigned long duration) {
+  // Fix D: use smartDelay instead of blocking delay() so serial commands
+  // (e.g. Reset) remain responsive during the error flash animation
   for (uint8_t t = 0; t < times; t++) {
     for (uint8_t i = 0; i < Num_Readers; i++) {
       digitalWrite(ledPins[i], HIGH); digitalWrite(relayPins[i], HIGH);
     }
-    delay(duration);
+    if (!smartDelay(duration)) return;
     for (uint8_t i = 0; i < Num_Readers; i++) {
       digitalWrite(ledPins[i], LOW); digitalWrite(relayPins[i], LOW);
     }
-    delay(duration);
+    if (!smartDelay(duration)) return;
   }
 }
 
