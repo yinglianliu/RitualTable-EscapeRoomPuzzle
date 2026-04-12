@@ -1,8 +1,8 @@
 /*
  * =======================================================================================
- * Project:    Ritual Table v4.2 - Interactive RFID Controller (Pure USB Serial + Raspberry Pi 5)
+ * Project:    Ritual Table v4 - Interactive RFID Controller (Pure USB Serial + Raspberry Pi 5)
  * Author:     Yinglian Liu
- * Date:       April 2026
+ * Date:       March 2026
  * =======================================================================================
  * Description:
  * This version uses pure USB serial communication between the Arduino and Raspberry Pi 5.
